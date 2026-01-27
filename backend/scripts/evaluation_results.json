@@ -1,0 +1,349 @@
+{
+  "metrics": {
+    "total_tests": 10,
+    "avg_keyword_accuracy": 78.0,
+    "avg_retrieval_score": 48.59,
+    "topic_filter_accuracy": 90.0,
+    "timestamp": "2026-01-27T16:47:21.459226"
+  },
+  "test_results": [
+    {
+      "test_id": 1,
+      "question": "How do I connect to WiFi?",
+      "category": "networking",
+      "should_answer": true,
+      "answer_preview": "**Menghubungkan ke Wi-Fi**\n\nUntuk menghubungkan ke Wi-Fi, ikuti langkah-langkah berikut:\n\n1. **Buka Pengaturan Jaringan**: Klik kanan pada \"My Network Places\" dan pilih \"Properties\".\n2. **Pilih Jenis ...",
+      "retrieval": {
+        "num_results": 5,
+        "avg_score": 0.47211999228727813,
+        "top_score": 0.4889158379298756,
+        "sources": [
+          "PC Hardware, Maintenance _ Troubleshooting In-Depth ( PDFDrive ).pdf",
+          "synthetic_knowledge_items.csv",
+          "PC Hardware, Maintenance _ Troubleshooting In-Depth ( PDFDrive ).pdf",
+          "PC Hardware, Maintenance _ Troubleshooting In-Depth ( PDFDrive ).pdf",
+          "PC Hardware, Maintenance _ Troubleshooting In-Depth ( PDFDrive ).pdf"
+        ]
+      },
+      "answer_quality": {
+        "keyword_score": 60.0,
+        "keywords_found": [
+          "network",
+          "connect",
+          "wireless"
+        ],
+        "keywords_missing": [
+          "wifi",
+          "settings"
+        ],
+        "topic_filter_correct": true,
+        "answer_length": 1175
+      },
+      "sources_count": 5
+    },
+    {
+      "test_id": 2,
+      "question": "My printer is showing offline. How to fix it?",
+      "category": "hardware",
+      "should_answer": true,
+      "answer_preview": "**Troubleshooting an Offline Printer**\n\nTo resolve the issue with your printer being shown as offline, follow these steps:\n\n### Step 1: Check the Power and Connection\n Ensure that the printer is turne...",
+      "retrieval": {
+        "num_results": 5,
+        "avg_score": 0.4663946375486385,
+        "top_score": 0.48044255293143706,
+        "sources": [
+          "synthetic_knowledge_items.csv",
+          "synthetic_knowledge_items.csv",
+          "synthetic_knowledge_items.csv",
+          "synthetic_knowledge_items.csv",
+          "PC Hardware, Maintenance _ Troubleshooting In-Depth ( PDFDrive ).pdf"
+        ]
+      },
+      "answer_quality": {
+        "keyword_score": 100.0,
+        "keywords_found": [
+          "printer",
+          "offline",
+          "driver",
+          "restart",
+          "connection"
+        ],
+        "keywords_missing": [],
+        "topic_filter_correct": true,
+        "answer_length": 2041
+      },
+      "sources_count": 5
+    },
+    {
+      "test_id": 3,
+      "question": "What is error code 0x0000007E?",
+      "category": "error_codes",
+      "should_answer": true,
+      "answer_preview": "Maaf, saya hanya dapat membantu pertanyaan terkait masalah teknis dan IT. Untuk informasi lainnya, silakan merujuk pada sumber yang lebih tepat.\n\n(To non-IT users)\nSorry, I can only help with technica...",
+      "retrieval": {
+        "num_results": 5,
+        "avg_score": 0.5551282470323298,
+        "top_score": 0.5690894188009276,
+        "sources": [
+          "Windows_Error_Code.txt",
+          "Windows_Error_Code.txt",
+          "Windows_Error_Code.txt",
+          "Windows_Error_Code.txt",
+          "Windows_Error_Code.txt"
+        ]
+      },
+      "answer_quality": {
+        "keyword_score": 20.0,
+        "keywords_found": [
+          "error"
+        ],
+        "keywords_missing": [
+          "driver",
+          "system",
+          "blue screen",
+          "bsod"
+        ],
+        "topic_filter_correct": false,
+        "answer_length": 450
+      },
+      "sources_count": 5
+    },
+    {
+      "test_id": 4,
+      "question": "How to reset my password?",
+      "category": "account",
+      "should_answer": true,
+      "answer_preview": "**Resetting Your Password**\n\nTo reset your password, follow these steps:\n\n**Option 1: Reset Password using Password Reset Tool (Recommended)**\n\n1. Go to the [company URL] and click on \"Forgot Password...",
+      "retrieval": {
+        "num_results": 5,
+        "avg_score": 0.562783391358888,
+        "top_score": 0.6178051188119558,
+        "sources": [
+          "synthetic_knowledge_items.csv",
+          "synthetic_knowledge_items.csv",
+          "synthetic_knowledge_items.csv",
+          "synthetic_knowledge_items.csv",
+          "synthetic_knowledge_items.csv"
+        ]
+      },
+      "answer_quality": {
+        "keyword_score": 60.0,
+        "keywords_found": [
+          "password",
+          "reset",
+          "account"
+        ],
+        "keywords_missing": [
+          "login",
+          "credentials"
+        ],
+        "topic_filter_correct": true,
+        "answer_length": 2045
+      },
+      "sources_count": 5
+    },
+    {
+      "test_id": 5,
+      "question": "How to setup VPN on Windows?",
+      "category": "software",
+      "should_answer": true,
+      "answer_preview": "**Setting Up a VPN on Windows**\n\nTo set up a VPN (Virtual Private Network) on Windows, you'll need to follow these steps:\n\n**Prerequisites:**\n\n* A Windows operating system (Windows 10 or later)\n* A co...",
+      "retrieval": {
+        "num_results": 5,
+        "avg_score": 0.5649895105376581,
+        "top_score": 0.6026256399131014,
+        "sources": [
+          "synthetic_knowledge_items.csv",
+          "synthetic_knowledge_items.csv",
+          "synthetic_knowledge_items.csv",
+          "synthetic_knowledge_items.csv",
+          "PC Hardware, Maintenance _ Troubleshooting In-Depth ( PDFDrive ).pdf"
+        ]
+      },
+      "answer_quality": {
+        "keyword_score": 100.0,
+        "keywords_found": [
+          "vpn",
+          "settings",
+          "connection",
+          "network",
+          "server"
+        ],
+        "keywords_missing": [],
+        "topic_filter_correct": true,
+        "answer_length": 2083
+      },
+      "sources_count": 5
+    },
+    {
+      "test_id": 6,
+      "question": "My laptop is very slow. What should I do?",
+      "category": "troubleshooting",
+      "should_answer": true,
+      "answer_preview": "**Troubleshooting Slow Laptop Issues**\n\nSorry to hear that your laptop is experiencing slowdown issues! Don't worry, we can try to identify and potentially resolve the problem together.\n\nHere are some...",
+      "retrieval": {
+        "num_results": 5,
+        "avg_score": 0.5235467430820987,
+        "top_score": 0.5633200968883527,
+        "sources": [
+          "synthetic_knowledge_items.csv",
+          "synthetic_knowledge_items.csv",
+          "PC Hardware, Maintenance _ Troubleshooting In-Depth ( PDFDrive ).pdf",
+          "PC Hardware, Maintenance _ Troubleshooting In-Depth ( PDFDrive ).pdf",
+          "synthetic_knowledge_items.csv"
+        ]
+      },
+      "answer_quality": {
+        "keyword_score": 100.0,
+        "keywords_found": [
+          "slow",
+          "performance",
+          "memory",
+          "disk",
+          "startup",
+          "cleanup"
+        ],
+        "keywords_missing": [],
+        "topic_filter_correct": true,
+        "answer_length": 2442
+      },
+      "sources_count": 5
+    },
+    {
+      "test_id": 7,
+      "question": "How to configure email in Outlook?",
+      "category": "software",
+      "should_answer": true,
+      "answer_preview": "**Configuring Email in Outlook**\n\nThis article provides step-by-step instructions for configuring email in Microsoft Outlook.\n\n**Prerequisites:**\n\n* You have already set up your email account on your ...",
+      "retrieval": {
+        "num_results": 5,
+        "avg_score": 0.46685275666729725,
+        "top_score": 0.5208297797551485,
+        "sources": [
+          "synthetic_knowledge_items.csv",
+          "synthetic_knowledge_items.csv",
+          "synthetic_knowledge_items.csv",
+          "synthetic_knowledge_items.csv",
+          "synthetic_knowledge_items.csv"
+        ]
+      },
+      "answer_quality": {
+        "keyword_score": 100.0,
+        "keywords_found": [
+          "email",
+          "outlook",
+          "account",
+          "settings",
+          "imap",
+          "smtp"
+        ],
+        "keywords_missing": [],
+        "topic_filter_correct": true,
+        "answer_length": 2552
+      },
+      "sources_count": 5
+    },
+    {
+      "test_id": 8,
+      "question": "What is HTTP error 404?",
+      "category": "error_codes",
+      "should_answer": true,
+      "answer_preview": "**HTTP Error 404: Not Found**\n================================\n\nHTTP response status code 404, or \"Not Found\", indicates that the server cannot find the requested resource. This means the URL is not r...",
+      "retrieval": {
+        "num_results": 5,
+        "avg_score": 0.5021624316522042,
+        "top_score": 0.582982940181881,
+        "sources": [
+          "HTTP_Error_Code.txt",
+          "HTTP_Error_Code.txt",
+          "HTTP_Error_Code.txt",
+          "HTTP_Error_Code.txt",
+          "HTTP_Error_Code.txt"
+        ]
+      },
+      "answer_quality": {
+        "keyword_score": 80.0,
+        "keywords_found": [
+          "404",
+          "not found",
+          "url",
+          "server"
+        ],
+        "keywords_missing": [
+          "page"
+        ],
+        "topic_filter_correct": true,
+        "answer_length": 1476
+      },
+      "sources_count": 5
+    },
+    {
+      "test_id": 9,
+      "question": "Siapa presiden Indonesia?",
+      "category": "non_it",
+      "should_answer": false,
+      "answer_preview": "Maaf, saya hanya dapat membantu pertanyaan terkait masalah teknis dan IT. Untuk informasi lainnya, silakan merujuk pada sumber yang lebih tepat.\n\n(Saya tidak memiliki informasi tentang posisi presiden...",
+      "retrieval": {
+        "num_results": 5,
+        "avg_score": 0.3849449228803148,
+        "top_score": 0.39552623440474666,
+        "sources": [
+          "synthetic_knowledge_items.csv",
+          "PC Hardware, Maintenance _ Troubleshooting In-Depth ( PDFDrive ).pdf",
+          "synthetic_knowledge_items.csv",
+          "PC Hardware, Maintenance _ Troubleshooting In-Depth ( PDFDrive ).pdf",
+          "PC Hardware, Maintenance _ Troubleshooting In-Depth ( PDFDrive ).pdf"
+        ]
+      },
+      "answer_quality": {
+        "keyword_score": 80.0,
+        "keywords_found": [
+          "maaf",
+          "hanya",
+          "teknis",
+          "it"
+        ],
+        "keywords_missing": [
+          "tidak dapat"
+        ],
+        "topic_filter_correct": true,
+        "answer_length": 344
+      },
+      "sources_count": 5
+    },
+    {
+      "test_id": 10,
+      "question": "Berapa skor pertandingan bola kemarin?",
+      "category": "non_it",
+      "should_answer": false,
+      "answer_preview": "Maaf, saya hanya dapat membantu pertanyaan terkait masalah teknis dan IT. Untuk informasi tentang pertandingan bola, silakan merujuk pada sumber yang lebih tepat seperti situs-situs olahraga atau medi...",
+      "retrieval": {
+        "num_results": 5,
+        "avg_score": 0.3605624660216184,
+        "top_score": 0.3623851334253139,
+        "sources": [
+          "synthetic_knowledge_items.csv",
+          "synthetic_knowledge_items.csv",
+          "HTTP_Error_Code.txt",
+          "HTTP_Error_Code.txt",
+          "HTTP_Error_Code.txt"
+        ]
+      },
+      "answer_quality": {
+        "keyword_score": 80.0,
+        "keywords_found": [
+          "maaf",
+          "hanya",
+          "teknis",
+          "it"
+        ],
+        "keywords_missing": [
+          "tidak dapat"
+        ],
+        "topic_filter_correct": true,
+        "answer_length": 298
+      },
+      "sources_count": 5
+    }
+  ]
+}
