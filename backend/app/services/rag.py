@@ -125,6 +125,55 @@ class RAGService:
         
         return response, sources, is_critical
     
+    def add_learned_qa(
+        self,
+        question: str,
+        answer: str,
+        message_id: str
+    ) -> bool:
+        """
+        Add a user-approved Q&A pair to the knowledge base.
+        This allows the chatbot to learn from successful interactions.
+        
+        Args:
+            question: The user's original question
+            answer: The assistant's approved answer
+            message_id: Unique ID of the message (for deduplication)
+            
+        Returns:
+            True if successfully added
+        """
+        try:
+            # Format the Q&A pair as a document
+            document_content = f"""Question: {question}
+
+Answer: {answer}"""
+            
+            metadata = {
+                "source": "user_feedback",
+                "category": "learned_qa",
+                "question": question[:200],  # Store truncated question in metadata
+                "type": "approved_answer",
+                "message_id": message_id
+            }
+            
+            # Generate unique ID based on message_id
+            doc_id = f"learned_qa_{message_id}"
+            
+            # Add to vector database
+            added = self.vectordb.add_documents(
+                documents=[document_content],
+                metadatas=[metadata],
+                ids=[doc_id]
+            )
+            
+            print(f"✓ Learned Q&A pair added to knowledge base (ID: {doc_id})")
+            return added > 0
+            
+        except Exception as e:
+            print(f"✗ Failed to add learned Q&A: {e}")
+            return False
+    
     def generate_response_stream(
         self,
         query: str,

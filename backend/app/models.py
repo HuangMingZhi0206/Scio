@@ -71,6 +71,7 @@ class Conversation(BaseModel):
     """Conversation summary."""
     id: str = Field(..., description="Conversation ID")
     title: str = Field(..., description="Conversation title")
+    is_pinned: bool = Field(False, description="Is conversation pinned")
     created_at: datetime = Field(..., description="Creation timestamp")
     updated_at: datetime = Field(..., description="Last update timestamp")
     message_count: int = Field(0, description="Number of messages")

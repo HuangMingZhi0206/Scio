@@ -25,6 +25,7 @@ export default function Home() {
         startNewConversation,
         loadConversation,
         deleteConversation,
+        pinConversation,
         submitFeedback,
         setSelectedModel,
         clearError,
@@ -65,6 +66,7 @@ export default function Home() {
                     onNewConversation={startNewConversation}
                     onSelectConversation={loadConversation}
                     onDeleteConversation={deleteConversation}
+                    onPinConversation={pinConversation}
                 />
             </div>
 
@@ -83,10 +85,12 @@ export default function Home() {
                             <Menu className="h-5 w-5" />
                         </Button>
 
-                        {/* Title */}
+                        {/* Title - shows current conversation title */}
                         <div className="hidden sm:block">
-                            <h2 className="text-sm font-medium text-dark-200">
-                                {currentConversationId ? "Conversation" : "New Chat"}
+                            <h2 className="text-sm font-medium text-dark-200 truncate max-w-[300px]">
+                                {currentConversationId
+                                    ? conversations.find(c => c.id === currentConversationId)?.title || "Conversation"
+                                    : "New Chat"}
                             </h2>
                         </div>
                     </div>

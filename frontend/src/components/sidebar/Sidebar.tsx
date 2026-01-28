@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Plus, Trash2, MessageSquare, Bot } from "lucide-react";
+import { Plus, Trash2, MessageSquare, Bot, Pin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDate, truncate } from "@/lib/utils";
 import { Conversation } from "@/lib/api";
@@ -20,6 +20,7 @@ interface SidebarProps {
     onNewConversation: () => void;
     onSelectConversation: (id: string) => void;
     onDeleteConversation: (id: string) => void;
+    onPinConversation: (id: string) => void;
     isCollapsed?: boolean;
 }
 
@@ -29,6 +30,7 @@ export function Sidebar({
     onNewConversation,
     onSelectConversation,
     onDeleteConversation,
+    onPinConversation,
     isCollapsed = false,
 }: SidebarProps) {
     return (
@@ -36,7 +38,7 @@ export function Sidebar({
             <div
                 className={cn(
                     "h-full flex flex-col bg-dark-900/50 backdrop-blur-sm border-r border-dark-800",
-                    isCollapsed ? "w-16" : "w-72"
+                    isCollapsed ? "w-16" : "w-80"
                 )}
             >
                 {/* Header */}
@@ -58,39 +60,37 @@ export function Sidebar({
                         )}
                     </div>
 
-                    {/* New conversation button */}
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button
-                                onClick={onNewConversation}
-                                variant="outline"
-                                className={cn(
-                                    "w-full justify-start gap-2 bg-dark-800/50 hover:bg-dark-700 border-dark-700",
-                                    isCollapsed && "justify-center px-0"
-                                )}
-                            >
-                                <Plus className="h-4 w-4" />
-                                {!isCollapsed && <span>New Chat</span>}
-                            </Button>
-                        </TooltipTrigger>
-                        {isCollapsed && (
+                    {/* New Chat Button */}
+                    {isCollapsed ? (
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    onClick={onNewConversation}
+                                    className="w-full bg-accent-500/10 hover:bg-accent-500/20 text-accent-400"
+                                    size="icon"
+                                >
+                                    <Plus className="h-4 w-4" />
+                                </Button>
+                            </TooltipTrigger>
                             <TooltipContent side="right">New Chat</TooltipContent>
-                        )}
-                    </Tooltip>
+                        </Tooltip>
+                    ) : (
+                        <Button
+                            onClick={onNewConversation}
+                            className="w-full bg-dark-800 hover:bg-dark-700 text-dark-200 border border-dark-700"
+                        >
+                            <Plus className="h-4 w-4 mr-2" />
+                            New Chat
+                        </Button>
+                    )}
                 </div>
 
-                {/* Conversation list */}
-                <ScrollArea className="flex-1 px-2 py-2">
-                    <div className="space-y-1">
+                {/* Conversation List */}
+                <ScrollArea className="flex-1">
+                    <div className="p-2 space-y-1">
                         {conversations.length === 0 ? (
-                            <div className="text-center py-8">
-                                {!isCollapsed && (
-                                    <>
-                                        <MessageSquare className="w-8 h-8 mx-auto text-dark-600 mb-2" />
-                                        <p className="text-xs text-dark-500">No conversations yet</p>
-                                        <p className="text-[10px] text-dark-600">Start a new chat above</p>
-                                    </>
-                                )}
+                            <div className="p-4 text-center">
+                                <p className="text-xs text-dark-500">No conversations yet</p>
                             </div>
                         ) : (
                             conversations.map((conversation) => (
@@ -101,6 +101,7 @@ export function Sidebar({
                                     isCollapsed={isCollapsed}
                                     onSelect={() => onSelectConversation(conversation.id)}
                                     onDelete={() => onDeleteConversation(conversation.id)}
+                                    onPin={() => onPinConversation(conversation.id)}
                                 />
                             ))
                         )}
@@ -131,6 +132,7 @@ interface ConversationItemProps {
     isCollapsed: boolean;
     onSelect: () => void;
     onDelete: () => void;
+    onPin: () => void;
 }
 
 function ConversationItem({
@@ -139,10 +141,16 @@ function ConversationItem({
     isCollapsed,
     onSelect,
     onDelete,
+    onPin,
 }: ConversationItemProps) {
     const handleDelete = (e: React.MouseEvent) => {
         e.stopPropagation();
         onDelete();
+    };
+
+    const handlePin = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        onPin();
     };
 
     if (isCollapsed) {
@@ -179,30 +187,51 @@ function ConversationItem({
                 isActive && "active"
             )}
         >
-            <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0 flex-1">
-                    <p className={cn(
-                        "text-sm font-medium truncate",
-                        isActive ? "text-accent-300" : "text-dark-200"
-                    )}>
-                        {conversation.title}
-                    </p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-[10px] text-dark-500">
-                            {formatDate(conversation.updated_at)}
-                        </span>
-                        <span className="text-[10px] text-dark-600">
-                            • {conversation.message_count} msgs
-                        </span>
-                    </div>
-                </div>
+            {/* Title row */}
+            <div className="flex items-center gap-1.5">
+                {conversation.is_pinned && (
+                    <Pin className="h-3 w-3 text-accent-400 flex-shrink-0" />
+                )}
+                <p className={cn(
+                    "text-sm font-medium truncate",
+                    isActive ? "text-accent-300" : "text-dark-200"
+                )}>
+                    {conversation.title}
+                </p>
+            </div>
 
-                {/* Delete button */}
+            {/* Info row */}
+            <div className="flex items-center gap-2 mt-0.5">
+                <span className="text-[10px] text-dark-500">
+                    {formatDate(conversation.updated_at)}
+                </span>
+                <span className="text-[10px] text-dark-600">
+                    • {conversation.message_count} msgs
+                </span>
+            </div>
+
+            {/* Action buttons - separate row */}
+            <div className="flex items-center gap-2 mt-2">
+                <button
+                    onClick={handlePin}
+                    className={cn(
+                        "flex items-center gap-1 px-2 py-1 rounded text-xs transition-all",
+                        conversation.is_pinned
+                            ? "bg-accent-500/20 text-accent-400"
+                            : "bg-dark-700/50 text-dark-400 hover:text-accent-400 hover:bg-accent-500/20"
+                    )}
+                    title={conversation.is_pinned ? "Unpin" : "Pin"}
+                >
+                    <Pin className="h-3 w-3" />
+                    <span>{conversation.is_pinned ? "Unpin" : "Pin"}</span>
+                </button>
                 <button
                     onClick={handleDelete}
-                    className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-500/20 transition-all"
+                    className="flex items-center gap-1 px-2 py-1 rounded text-xs bg-dark-700/50 text-dark-400 hover:text-red-400 hover:bg-red-500/20 transition-all"
+                    title="Delete"
                 >
-                    <Trash2 className="h-3.5 w-3.5 text-dark-500 hover:text-red-400" />
+                    <Trash2 className="h-3 w-3" />
+                    <span>Delete</span>
                 </button>
             </div>
         </div>

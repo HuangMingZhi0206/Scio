@@ -61,7 +61,7 @@ def run_ingestion(force_reingest: bool = False):
         )
         
         ingestion_status["documents_count"] = count
-        ingestion_status["last_ingestion"] = datetime.utcnow()
+        ingestion_status["last_ingestion"] = datetime.now()
         print(f"Ingestion complete: {count} documents added")
         
     except Exception as e:

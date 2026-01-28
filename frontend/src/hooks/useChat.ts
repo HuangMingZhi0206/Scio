@@ -18,6 +18,7 @@ interface UseChatReturn {
     startNewConversation: () => void;
     loadConversation: (conversationId: string) => Promise<void>;
     deleteConversation: (conversationId: string) => Promise<void>;
+    pinConversation: (conversationId: string) => Promise<void>;
     submitFeedback: (messageId: string, feedback: 'thumbs_up' | 'thumbs_down') => Promise<void>;
     refreshConversations: () => Promise<void>;
     setSelectedModel: (model: string) => void;
@@ -140,6 +141,16 @@ export function useChat(): UseChatReturn {
         }
     }, []);
 
+    const pinConversation = useCallback(async (conversationId: string) => {
+        try {
+            await api.togglePinConversation(conversationId);
+            await refreshConversations();
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : "Failed to pin conversation";
+            setError(errorMessage);
+        }
+    }, [refreshConversations]);
+
     const clearError = useCallback(() => {
         setError(null);
     }, []);
@@ -155,6 +166,7 @@ export function useChat(): UseChatReturn {
         startNewConversation,
         loadConversation,
         deleteConversation,
+        pinConversation,
         submitFeedback,
         refreshConversations,
         setSelectedModel,

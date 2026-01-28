@@ -132,7 +132,7 @@ async def send_message(
         except Exception:
             conversation.title = request.message[:50] + "..." if len(request.message) > 50 else request.message
     
-    conversation.updated_at = datetime.utcnow()
+    conversation.updated_at = datetime.now()
     db.commit()
     
     # Build response
@@ -207,6 +207,8 @@ async def submit_feedback(
 ):
     """
     Submit feedback for a message.
+    If feedback is thumbs_up, the Q&A pair is added to the knowledge base
+    so the chatbot can learn from successful interactions.
     """
     message = db.query(MessageDB).filter(
         MessageDB.id == request.message_id
@@ -218,7 +220,33 @@ async def submit_feedback(
     message.feedback = request.feedback.value
     db.commit()
     
-    return {"success": True, "message": "Feedback recorded"}
+    learned = False
+    
+    # If thumbs up, add Q&A pair to knowledge base for learning
+    if request.feedback.value == "thumbs_up":
+        # Get the previous user message (the question)
+        prev_messages = db.query(MessageDB).filter(
+            MessageDB.conversation_id == message.conversation_id,
+            MessageDB.timestamp < message.timestamp,
+            MessageDB.role == "user"
+        ).order_by(MessageDB.timestamp.desc()).first()
+        
+        if prev_messages:
+            question = prev_messages.content
+            answer = message.content
+            
+            # Add to knowledge base
+            learned = rag_service.add_learned_qa(
+                question=question,
+                answer=answer,
+                message_id=message.id
+            )
+    
+    return {
+        "success": True, 
+        "message": "Feedback recorded",
+        "learned": learned
+    }
 
 
 @router.get("/conversations", response_model=ConversationListResponse)
@@ -228,11 +256,13 @@ async def list_conversations(
     db: Session = Depends(get_db)
 ):
     """
-    List all conversations.
+    List all conversations with pinned first.
     """
     total = db.query(ConversationDB).count()
     
+    # Sort by pinned first, then by updated_at
     conversations = db.query(ConversationDB).order_by(
+        ConversationDB.is_pinned.desc(),
         ConversationDB.updated_at.desc()
     ).offset(offset).limit(limit).all()
     
@@ -245,6 +275,7 @@ async def list_conversations(
         result.append(Conversation(
             id=conv.id,
             title=conv.title,
+            is_pinned=conv.is_pinned or False,
             created_at=conv.created_at,
             updated_at=conv.updated_at,
             message_count=msg_count
@@ -320,3 +351,24 @@ async def delete_conversation(
     db.commit()
     
     return {"success": True, "message": "Conversation deleted"}
+
+
+@router.patch("/conversations/{conversation_id}/pin")
+async def toggle_pin_conversation(
+    conversation_id: str,
+    db: Session = Depends(get_db)
+):
+    """
+    Toggle pin status of a conversation.
+    """
+    conversation = db.query(ConversationDB).filter(
+        ConversationDB.id == conversation_id
+    ).first()
+    
+    if not conversation:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    
+    conversation.is_pinned = not (conversation.is_pinned or False)
+    db.commit()
+    
+    return {"success": True, "is_pinned": conversation.is_pinned}

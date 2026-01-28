@@ -24,6 +24,7 @@ export interface ChatMessage {
 export interface Conversation {
     id: string;
     title: string;
+    is_pinned: boolean;
     created_at: string;
     updated_at: string;
     message_count: number;
@@ -127,6 +128,13 @@ export const api = {
             method: 'DELETE',
         });
         await handleResponse<{ success: boolean }>(response);
+    },
+
+    async togglePinConversation(conversationId: string): Promise<{ is_pinned: boolean }> {
+        const response = await fetch(`${API_BASE}/chat/conversations/${conversationId}/pin`, {
+            method: 'PATCH',
+        });
+        return handleResponse<{ success: boolean; is_pinned: boolean }>(response);
     },
 
     // Knowledge base endpoints

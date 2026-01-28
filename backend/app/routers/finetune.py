@@ -15,8 +15,11 @@ router = APIRouter(prefix="/finetune", tags=["Fine-tuning"])
 class CreateModelRequest(BaseModel):
     """Request model for creating a custom model."""
     name: str = Field(..., min_length=1, max_length=50, description="Name for the new model")
-    base_model: str = Field(default="llama3:8b", description="Base model to use")
+    base_model: str = Field(default="llama3.2:3b", description="Base model to use")
     custom_prompt: Optional[str] = Field(None, description="Optional custom system prompt")
+    temperature: float = Field(default=0.7, ge=0.0, le=1.0, description="Temperature for generation")
+    top_p: float = Field(default=0.9, ge=0.1, le=1.0, description="Top P for sampling")
+    num_ctx: int = Field(default=4096, ge=512, le=32768, description="Context length")
 
 
 class ModelResponse(BaseModel):
@@ -47,7 +50,10 @@ async def create_custom_model(request: CreateModelRequest):
     result = service.create_model(
         model_name=request.name,
         base_model=request.base_model,
-        custom_prompt=request.custom_prompt
+        custom_prompt=request.custom_prompt,
+        temperature=request.temperature,
+        top_p=request.top_p,
+        num_ctx=request.num_ctx
     )
     
     if result["success"]:

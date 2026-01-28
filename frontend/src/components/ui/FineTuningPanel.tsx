@@ -32,7 +32,11 @@ export function FineTuningPanel({ onModelCreated }: FineTuningPanelProps) {
 
     // Form state
     const [modelName, setModelName] = useState("scio-helpdesk");
-    const [selectedBaseModel, setSelectedBaseModel] = useState("llama3:8b");
+    const [selectedBaseModel, setSelectedBaseModel] = useState("llama3.2:3b");
+    const [customPrompt, setCustomPrompt] = useState("");
+    const [temperature, setTemperature] = useState(0.7);
+    const [topP, setTopP] = useState(0.9);
+    const [numCtx, setNumCtx] = useState(4096);
 
     const fetchModels = async () => {
         setIsLoading(true);
@@ -74,6 +78,10 @@ export function FineTuningPanel({ onModelCreated }: FineTuningPanelProps) {
                 body: JSON.stringify({
                     name: modelName,
                     base_model: selectedBaseModel,
+                    custom_prompt: customPrompt || null,
+                    temperature: temperature,
+                    top_p: topP,
+                    num_ctx: numCtx,
                 }),
             });
 
@@ -191,6 +199,82 @@ export function FineTuningPanel({ onModelCreated }: FineTuningPanelProps) {
                                 </option>
                             ))}
                         </select>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-dark-300 mb-2">
+                            Custom System Prompt (optional)
+                        </label>
+                        <textarea
+                            value={customPrompt}
+                            onChange={(e) => setCustomPrompt(e.target.value)}
+                            placeholder="You are an expert IT Helpdesk assistant..."
+                            rows={4}
+                            className="w-full px-4 py-2 rounded-lg bg-dark-900 border border-dark-700 text-white placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-accent-500/50 resize-none text-sm"
+                        />
+                        <p className="text-xs text-dark-500 mt-1">
+                            Leave empty to use the default IT Helpdesk system prompt
+                        </p>
+                    </div>
+
+                    {/* Advanced Parameters */}
+                    <div className="pt-3 border-t border-dark-700">
+                        <p className="text-sm font-medium text-dark-300 mb-3">Advanced Parameters</p>
+
+                        {/* Temperature */}
+                        <div className="mb-4">
+                            <div className="flex justify-between items-center mb-1">
+                                <label className="text-xs text-dark-400">Temperature</label>
+                                <span className="text-xs text-accent-400 font-mono">{temperature.toFixed(2)}</span>
+                            </div>
+                            <input
+                                type="range"
+                                min="0"
+                                max="1"
+                                step="0.05"
+                                value={temperature}
+                                onChange={(e) => setTemperature(parseFloat(e.target.value))}
+                                className="w-full h-2 rounded-lg bg-dark-700 appearance-none cursor-pointer accent-accent-500"
+                            />
+                            <p className="text-[10px] text-dark-500 mt-1">Lower = more focused, Higher = more creative</p>
+                        </div>
+
+                        {/* Top P */}
+                        <div className="mb-4">
+                            <div className="flex justify-between items-center mb-1">
+                                <label className="text-xs text-dark-400">Top P (Nucleus Sampling)</label>
+                                <span className="text-xs text-accent-400 font-mono">{topP.toFixed(2)}</span>
+                            </div>
+                            <input
+                                type="range"
+                                min="0.1"
+                                max="1"
+                                step="0.05"
+                                value={topP}
+                                onChange={(e) => setTopP(parseFloat(e.target.value))}
+                                className="w-full h-2 rounded-lg bg-dark-700 appearance-none cursor-pointer accent-accent-500"
+                            />
+                            <p className="text-[10px] text-dark-500 mt-1">Controls diversity of token selection</p>
+                        </div>
+
+                        {/* Context Length */}
+                        <div>
+                            <div className="flex justify-between items-center mb-1">
+                                <label className="text-xs text-dark-400">Context Length</label>
+                                <span className="text-xs text-accent-400 font-mono">{numCtx}</span>
+                            </div>
+                            <select
+                                value={numCtx}
+                                onChange={(e) => setNumCtx(parseInt(e.target.value))}
+                                className="w-full px-3 py-1.5 rounded-lg bg-dark-900 border border-dark-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/50"
+                            >
+                                <option value={2048}>2048 tokens</option>
+                                <option value={4096}>4096 tokens (default)</option>
+                                <option value={8192}>8192 tokens</option>
+                                <option value={16384}>16384 tokens</option>
+                            </select>
+                            <p className="text-[10px] text-dark-500 mt-1">Maximum context window size</p>
+                        </div>
                     </div>
 
                     <button

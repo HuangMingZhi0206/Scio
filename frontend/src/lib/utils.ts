@@ -9,25 +9,37 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Format a date string to a readable format
+ * Format a date string to a readable format (WIB timezone)
  */
 export function formatDate(dateString: string): string {
     const date = new Date(dateString);
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
 
-    if (diffMins < 1) return "Just now";
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
+    // For very recent messages, show relative time
+    if (diffMins < 1) return "Baru saja";
+    if (diffMins < 5) return `${diffMins} menit lalu`;
 
-    return date.toLocaleDateString("en-US", {
-        month: "short",
+    // For messages from today, show actual time in WIB
+    const isToday = date.toDateString() === now.toDateString();
+    if (isToday) {
+        return date.toLocaleTimeString("id-ID", {
+            hour: "2-digit",
+            minute: "2-digit",
+            timeZone: "Asia/Jakarta",
+        }) + " WIB";
+    }
+
+    // For recent days
+    if (diffDays < 7) return `${diffDays} hari lalu`;
+
+    return date.toLocaleDateString("id-ID", {
         day: "numeric",
+        month: "short",
         year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
+        timeZone: "Asia/Jakarta",
     });
 }
 

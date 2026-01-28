@@ -23,17 +23,24 @@ class FineTuneService:
         self.models_dir.mkdir(exist_ok=True)
         self.default_modelfile = self.models_dir / "Modelfile.helpdesk"
     
-    def get_modelfile_content(self, base_model: str = "llama3:8b", custom_prompt: Optional[str] = None) -> str:
-        """Generate Modelfile content."""
+    def get_modelfile_content(
+        self, 
+        base_model: str = "llama3.2:3b", 
+        custom_prompt: Optional[str] = None,
+        temperature: float = 0.7,
+        top_p: float = 0.9,
+        num_ctx: int = 4096
+    ) -> str:
+        """Generate Modelfile content with custom parameters."""
         system_prompt = custom_prompt or self._get_default_system_prompt()
         
         return f'''FROM {base_model}
 
 # IT Helpdesk specialized model parameters
-PARAMETER temperature 0.7
-PARAMETER top_p 0.9
+PARAMETER temperature {temperature}
+PARAMETER top_p {top_p}
 PARAMETER top_k 40
-PARAMETER num_ctx 4096
+PARAMETER num_ctx {num_ctx}
 
 # System prompt for IT Helpdesk assistant
 SYSTEM """{system_prompt}"""
@@ -70,23 +77,35 @@ You are helpful, accurate, and focused on solving IT problems efficiently."""
     def create_model(
         self,
         model_name: str,
-        base_model: str = "llama3:8b",
-        custom_prompt: Optional[str] = None
+        base_model: str = "llama3.2:3b",
+        custom_prompt: Optional[str] = None,
+        temperature: float = 0.7,
+        top_p: float = 0.9,
+        num_ctx: int = 4096
     ) -> Dict[str, Any]:
         """
         Create a custom Ollama model using Modelfile.
         
         Args:
             model_name: Name for the new model
-            base_model: Base model to use (e.g., llama3:8b)
+            base_model: Base model to use (e.g., llama3.2:3b)
             custom_prompt: Optional custom system prompt
+            temperature: Generation temperature (0.0-1.0)
+            top_p: Top P sampling parameter (0.1-1.0)
+            num_ctx: Context window size
             
         Returns:
             Dict with status and model info
         """
         try:
-            # Generate Modelfile content
-            modelfile_content = self.get_modelfile_content(base_model, custom_prompt)
+            # Generate Modelfile content with custom parameters
+            modelfile_content = self.get_modelfile_content(
+                base_model, 
+                custom_prompt,
+                temperature,
+                top_p,
+                num_ctx
+            )
             
             # Save Modelfile
             modelfile_path = self.models_dir / f"Modelfile.{model_name}"
