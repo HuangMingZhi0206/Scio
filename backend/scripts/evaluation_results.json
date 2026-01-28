@@ -1,10 +1,10 @@
 {
   "metrics": {
     "total_tests": 10,
-    "avg_keyword_accuracy": 78.0,
+    "avg_keyword_accuracy": 74.67,
     "avg_retrieval_score": 48.59,
-    "topic_filter_accuracy": 90.0,
-    "timestamp": "2026-01-27T16:47:21.459226"
+    "topic_filter_accuracy": 80.0,
+    "timestamp": "2026-01-28T08:24:35.920815"
   },
   "test_results": [
     {
@@ -12,7 +12,7 @@
       "question": "How do I connect to WiFi?",
       "category": "networking",
       "should_answer": true,
-      "answer_preview": "**Menghubungkan ke Wi-Fi**\n\nUntuk menghubungkan ke Wi-Fi, ikuti langkah-langkah berikut:\n\n1. **Buka Pengaturan Jaringan**: Klik kanan pada \"My Network Places\" dan pilih \"Properties\".\n2. **Pilih Jenis ...",
+      "answer_preview": "Maaf, saya hanya dapat membantu pertanyaan terkait masalah teknis dan IT. Untuk informasi lainnya, silakan merujuk pada sumber yang lebih tepat.\n\n**Menghubungkan ke Wi-Fi: Langkah-langkah Umum**\n\n1. P...",
       "retrieval": {
         "num_results": 5,
         "avg_score": 0.47211999228727813,
@@ -26,18 +26,18 @@
         ]
       },
       "answer_quality": {
-        "keyword_score": 60.0,
+        "keyword_score": 40.0,
         "keywords_found": [
-          "network",
           "connect",
           "wireless"
         ],
         "keywords_missing": [
           "wifi",
+          "network",
           "settings"
         ],
-        "topic_filter_correct": true,
-        "answer_length": 1175
+        "topic_filter_correct": false,
+        "answer_length": 1071
       },
       "sources_count": 5
     },
@@ -46,7 +46,7 @@
       "question": "My printer is showing offline. How to fix it?",
       "category": "hardware",
       "should_answer": true,
-      "answer_preview": "**Troubleshooting an Offline Printer**\n\nTo resolve the issue with your printer being shown as offline, follow these steps:\n\n### Step 1: Check the Power and Connection\n Ensure that the printer is turne...",
+      "answer_preview": "**Offline Printer Issue: Step-by-Step Solution**\n\nDon't worry; we can troubleshoot and resolve this issue together!\n\nTo fix an offline printer issue:\n\n1. **Restart the printer**: Turn off the printer,...",
       "retrieval": {
         "num_results": 5,
         "avg_score": 0.4663946375486385,
@@ -70,7 +70,7 @@
         ],
         "keywords_missing": [],
         "topic_filter_correct": true,
-        "answer_length": 2041
+        "answer_length": 2087
       },
       "sources_count": 5
     },
@@ -79,7 +79,7 @@
       "question": "What is error code 0x0000007E?",
       "category": "error_codes",
       "should_answer": true,
-      "answer_preview": "Maaf, saya hanya dapat membantu pertanyaan terkait masalah teknis dan IT. Untuk informasi lainnya, silakan merujuk pada sumber yang lebih tepat.\n\n(To non-IT users)\nSorry, I can only help with technica...",
+      "answer_preview": "Saya tidak memiliki informasi tersebut dalam knowledge base saya. Silakan hubungi tim IT support untuk bantuan lebih lanjut.\n\n(TO: User)\n\nApologies, I don't have information on that specific error cod...",
       "retrieval": {
         "num_results": 5,
         "avg_score": 0.5551282470323298,
@@ -103,8 +103,8 @@
           "blue screen",
           "bsod"
         ],
-        "topic_filter_correct": false,
-        "answer_length": 450
+        "topic_filter_correct": true,
+        "answer_length": 282
       },
       "sources_count": 5
     },
@@ -113,7 +113,7 @@
       "question": "How to reset my password?",
       "category": "account",
       "should_answer": true,
-      "answer_preview": "**Resetting Your Password**\n\nTo reset your password, follow these steps:\n\n**Option 1: Reset Password using Password Reset Tool (Recommended)**\n\n1. Go to the [company URL] and click on \"Forgot Password...",
+      "answer_preview": "**Resetting Your Password**\n\nIf you have forgotten your password or need to change it for security reasons, follow these steps:\n\n### Option 1: Reset Password using Password Reset Tool (Recommended)\n\n1...",
       "retrieval": {
         "num_results": 5,
         "avg_score": 0.562783391358888,
@@ -138,7 +138,7 @@
           "credentials"
         ],
         "topic_filter_correct": true,
-        "answer_length": 2045
+        "answer_length": 1698
       },
       "sources_count": 5
     },
@@ -147,7 +147,7 @@
       "question": "How to setup VPN on Windows?",
       "category": "software",
       "should_answer": true,
-      "answer_preview": "**Setting Up a VPN on Windows**\n\nTo set up a VPN (Virtual Private Network) on Windows, you'll need to follow these steps:\n\n**Prerequisites:**\n\n* A Windows operating system (Windows 10 or later)\n* A co...",
+      "answer_preview": "**Setting Up a VPN on Windows**\n\nTo set up a Virtual Private Network (VPN) on Windows, follow these steps:\n\n**Using the Built-in Microsoft VPN Client**\n\n1. **Open the Settings app**: Click on the Star...",
       "retrieval": {
         "num_results": 5,
         "avg_score": 0.5649895105376581,
@@ -171,7 +171,7 @@
         ],
         "keywords_missing": [],
         "topic_filter_correct": true,
-        "answer_length": 2083
+        "answer_length": 2762
       },
       "sources_count": 5
     },
@@ -180,7 +180,7 @@
       "question": "My laptop is very slow. What should I do?",
       "category": "troubleshooting",
       "should_answer": true,
-      "answer_preview": "**Troubleshooting Slow Laptop Issues**\n\nSorry to hear that your laptop is experiencing slowdown issues! Don't worry, we can try to identify and potentially resolve the problem together.\n\nHere are some...",
+      "answer_preview": "Maaf, saya hanya dapat membantu pertanyaan terkait masalah teknis dan IT. Untuk informasi lainnya, silakan merujuk pada sumber yang lebih tepat.\n\nHowever, I can guide you through some general steps to...",
       "retrieval": {
         "num_results": 5,
         "avg_score": 0.5235467430820987,
@@ -194,18 +194,19 @@
         ]
       },
       "answer_quality": {
-        "keyword_score": 100.0,
+        "keyword_score": 83.33,
         "keywords_found": [
           "slow",
-          "performance",
           "memory",
           "disk",
           "startup",
           "cleanup"
         ],
-        "keywords_missing": [],
-        "topic_filter_correct": true,
-        "answer_length": 2442
+        "keywords_missing": [
+          "performance"
+        ],
+        "topic_filter_correct": false,
+        "answer_length": 2876
       },
       "sources_count": 5
     },
@@ -214,7 +215,7 @@
       "question": "How to configure email in Outlook?",
       "category": "software",
       "should_answer": true,
-      "answer_preview": "**Configuring Email in Outlook**\n\nThis article provides step-by-step instructions for configuring email in Microsoft Outlook.\n\n**Prerequisites:**\n\n* You have already set up your email account on your ...",
+      "answer_preview": "**Configuring Email in Outlook**\n\nThis article provides step-by-step instructions for configuring email in Microsoft Outlook.\n\n**Prerequisites:**\n\n* You have installed and set up Microsoft Outlook on ...",
       "retrieval": {
         "num_results": 5,
         "avg_score": 0.46685275666729725,
@@ -228,18 +229,19 @@
         ]
       },
       "answer_quality": {
-        "keyword_score": 100.0,
+        "keyword_score": 83.33,
         "keywords_found": [
           "email",
           "outlook",
           "account",
           "settings",
-          "imap",
+          "imap"
+        ],
+        "keywords_missing": [
           "smtp"
         ],
-        "keywords_missing": [],
         "topic_filter_correct": true,
-        "answer_length": 2552
+        "answer_length": 2792
       },
       "sources_count": 5
     },
@@ -248,7 +250,7 @@
       "question": "What is HTTP error 404?",
       "category": "error_codes",
       "should_answer": true,
-      "answer_preview": "**HTTP Error 404: Not Found**\n================================\n\nHTTP response status code 404, or \"Not Found\", indicates that the server cannot find the requested resource. This means the URL is not r...",
+      "answer_preview": "**HTTP Error 404: Not Found**\n====================================\n\nHTTP response status code 404 (Not Found) indicates that the server cannot find the requested resource. In other words, the URL or e...",
       "retrieval": {
         "num_results": 5,
         "avg_score": 0.5021624316522042,
@@ -262,18 +264,17 @@
         ]
       },
       "answer_quality": {
-        "keyword_score": 80.0,
+        "keyword_score": 100.0,
         "keywords_found": [
           "404",
           "not found",
+          "page",
           "url",
           "server"
         ],
-        "keywords_missing": [
-          "page"
-        ],
+        "keywords_missing": [],
         "topic_filter_correct": true,
-        "answer_length": 1476
+        "answer_length": 1466
       },
       "sources_count": 5
     },
@@ -307,7 +308,7 @@
           "tidak dapat"
         ],
         "topic_filter_correct": true,
-        "answer_length": 344
+        "answer_length": 314
       },
       "sources_count": 5
     },
@@ -316,7 +317,7 @@
       "question": "Berapa skor pertandingan bola kemarin?",
       "category": "non_it",
       "should_answer": false,
-      "answer_preview": "Maaf, saya hanya dapat membantu pertanyaan terkait masalah teknis dan IT. Untuk informasi tentang pertandingan bola, silakan merujuk pada sumber yang lebih tepat seperti situs-situs olahraga atau medi...",
+      "answer_preview": "Maaf, saya hanya dapat membantu pertanyaan terkait masalah teknis dan IT. Untuk informasi lainnya, silakan merujuk pada sumber yang lebih tepat.\n\nSaya tidak memiliki informasi tentang pertandingan bol...",
       "retrieval": {
         "num_results": 5,
         "avg_score": 0.3605624660216184,
@@ -341,7 +342,7 @@
           "tidak dapat"
         ],
         "topic_filter_correct": true,
-        "answer_length": 298
+        "answer_length": 319
       },
       "sources_count": 5
     }

@@ -9,6 +9,7 @@ interface UseChatReturn {
     messages: ChatMessage[];
     conversations: Conversation[];
     currentConversationId: string | null;
+    selectedModel: string;
     isLoading: boolean;
     error: string | null;
 
@@ -19,6 +20,7 @@ interface UseChatReturn {
     deleteConversation: (conversationId: string) => Promise<void>;
     submitFeedback: (messageId: string, feedback: 'thumbs_up' | 'thumbs_down') => Promise<void>;
     refreshConversations: () => Promise<void>;
+    setSelectedModel: (model: string) => void;
     clearError: () => void;
 }
 
@@ -26,6 +28,7 @@ export function useChat(): UseChatReturn {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [conversations, setConversations] = useState<Conversation[]>([]);
     const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
+    const [selectedModel, setSelectedModel] = useState<string>("llama3.2:3b");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -59,7 +62,7 @@ export function useChat(): UseChatReturn {
         setMessages((prev) => [...prev, userMessage]);
 
         try {
-            const response = await api.sendMessage(content, currentConversationId || undefined);
+            const response = await api.sendMessage(content, currentConversationId || undefined, selectedModel);
 
             // Update conversation ID if new
             if (!currentConversationId) {
@@ -80,7 +83,7 @@ export function useChat(): UseChatReturn {
         } finally {
             setIsLoading(false);
         }
-    }, [currentConversationId, isLoading, refreshConversations]);
+    }, [currentConversationId, selectedModel, isLoading, refreshConversations]);
 
     const startNewConversation = useCallback(() => {
         setMessages([]);
@@ -145,6 +148,7 @@ export function useChat(): UseChatReturn {
         messages,
         conversations,
         currentConversationId,
+        selectedModel,
         isLoading,
         error,
         sendMessage,
@@ -153,6 +157,7 @@ export function useChat(): UseChatReturn {
         deleteConversation,
         submitFeedback,
         refreshConversations,
+        setSelectedModel,
         clearError,
     };
 }

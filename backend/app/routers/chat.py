@@ -8,6 +8,7 @@ from datetime import datetime
 from typing import Optional
 import uuid
 import json
+import ollama
 
 from app.database import get_db, ConversationDB, MessageDB
 from app.models import (
@@ -19,6 +20,38 @@ from app.services.rag import get_rag_service
 from app.services.llm import get_llm_service
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
+
+
+@router.get("/models")
+async def list_available_models():
+    """
+    List available Ollama models.
+    """
+    try:
+        result = ollama.list()
+        available_models = []
+        # ollama.list() returns an object with .models attribute containing Model objects
+        models_list = result.models if hasattr(result, 'models') else result.get('models', [])
+        for model in models_list:
+            # Model can be an object with attributes or a dict
+            if hasattr(model, 'model'):
+                model_name = model.model
+                model_size = getattr(model, 'size', 0) or 0
+                modified_at = str(getattr(model, 'modified_at', ''))
+            else:
+                model_name = model.get('name', '') or model.get('model', '')
+                model_size = model.get('size', 0)
+                modified_at = str(model.get('modified_at', ''))
+            
+            if model_name:
+                available_models.append({
+                    "name": model_name,
+                    "size": model_size,
+                    "modified_at": modified_at
+                })
+        return {"models": available_models}
+    except Exception as e:
+        return {"models": [], "error": str(e)}
 
 
 @router.post("", response_model=ChatResponse)
@@ -74,7 +107,8 @@ async def send_message(
     try:
         response_text, sources, is_critical = rag_service.generate_response(
             query=request.message,
-            conversation_history=conversation_history
+            conversation_history=conversation_history,
+            model=request.model
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to generate response: {str(e)}")
@@ -91,10 +125,9 @@ async def send_message(
     )
     db.add(assistant_message)
     
-    # Update conversation title if first message
     if len(history_messages) == 0:
         try:
-            title = llm_service.generate_title(request.message)
+            title = llm_service.generate_title(request.message, model=request.model)
             conversation.title = title
         except Exception:
             conversation.title = request.message[:50] + "..." if len(request.message) > 50 else request.message

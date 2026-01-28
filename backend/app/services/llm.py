@@ -30,7 +30,8 @@ class LLMService:
         self,
         user_message: str,
         context: str,
-        conversation_history: Optional[list] = None
+        conversation_history: Optional[list] = None,
+        model: Optional[str] = None
     ) -> str:
         """
         Generate a response using the LLM.
@@ -61,8 +62,9 @@ class LLMService:
         messages.append({"role": "user", "content": user_message})
         
         try:
+            use_model = model or self.model
             response = ollama.chat(
-                model=self.model,
+                model=use_model,
                 messages=messages,
                 options={
                     "temperature": 0.7,
@@ -79,7 +81,8 @@ class LLMService:
         self,
         user_message: str,
         context: str,
-        conversation_history: Optional[list] = None
+        conversation_history: Optional[list] = None,
+        model: Optional[str] = None
     ) -> Generator[str, None, None]:
         """
         Generate a streaming response using the LLM.
@@ -106,8 +109,9 @@ class LLMService:
         messages.append({"role": "user", "content": user_message})
         
         try:
+            use_model = model or self.model
             stream = ollama.chat(
-                model=self.model,
+                model=use_model,
                 messages=messages,
                 stream=True,
                 options={
@@ -124,7 +128,7 @@ class LLMService:
             print(f"Ollama streaming error: {e}")
             yield f"Error: Failed to generate response - {str(e)}"
     
-    def generate_title(self, first_message: str) -> str:
+    def generate_title(self, first_message: str, model: Optional[str] = None) -> str:
         """
         Generate a conversation title from the first message.
         
@@ -135,8 +139,9 @@ class LLMService:
             Short title for the conversation
         """
         try:
+            use_model = model or self.model
             response = ollama.chat(
-                model=self.model,
+                model=use_model,
                 messages=[
                     {
                         "role": "system",

@@ -91,7 +91,8 @@ class RAGService:
     def generate_response(
         self,
         query: str,
-        conversation_history: Optional[List[Dict[str, str]]] = None
+        conversation_history: Optional[List[Dict[str, str]]] = None,
+        model: Optional[str] = None
     ) -> Tuple[str, List[SourceDocument], bool]:
         """
         Generate a RAG response for a query.
@@ -113,7 +114,8 @@ class RAGService:
         response = self.llm.generate(
             user_message=query,
             context=context,
-            conversation_history=conversation_history
+            conversation_history=conversation_history,
+            model=model
         )
         
         # Add critical warning if needed
@@ -126,7 +128,8 @@ class RAGService:
     def generate_response_stream(
         self,
         query: str,
-        conversation_history: Optional[List[Dict[str, str]]] = None
+        conversation_history: Optional[List[Dict[str, str]]] = None,
+        model: Optional[str] = None
     ):
         """
         Generate a streaming RAG response.
@@ -152,7 +155,8 @@ class RAGService:
         for chunk in self.llm.generate_stream(
             user_message=query,
             context=context,
-            conversation_history=conversation_history
+            conversation_history=conversation_history,
+            model=model
         ):
             yield chunk
         

@@ -55,6 +55,12 @@ export interface KnowledgeStats {
     sources: Record<string, any>;
 }
 
+export interface OllamaModel {
+    name: string;
+    size: number;
+    modified_at: string;
+}
+
 class ApiError extends Error {
     constructor(public status: number, message: string) {
         super(message);
@@ -78,16 +84,22 @@ export const api = {
     },
 
     // Chat endpoints
-    async sendMessage(message: string, conversationId?: string): Promise<ChatResponse> {
+    async sendMessage(message: string, conversationId?: string, model?: string): Promise<ChatResponse> {
         const response = await fetch(`${API_BASE}/chat`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 message,
                 conversation_id: conversationId,
+                model: model,
             }),
         });
         return handleResponse<ChatResponse>(response);
+    },
+
+    async getModels(): Promise<{ models: OllamaModel[] }> {
+        const response = await fetch(`${API_BASE}/chat/models`);
+        return handleResponse<{ models: OllamaModel[] }>(response);
     },
 
     async submitFeedback(messageId: string, feedback: 'thumbs_up' | 'thumbs_down'): Promise<void> {

@@ -1,20 +1,24 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { Menu, X, AlertCircle } from "lucide-react";
+import { Menu, X, AlertCircle, Sparkles } from "lucide-react";
 import { useChat } from "@/hooks/useChat";
 import { Sidebar } from "@/components/sidebar/Sidebar";
 import { ChatContainer } from "@/components/chat/ChatContainer";
 import { ChatInput } from "@/components/chat/ChatInput";
+import { ModelSelector } from "@/components/ui/ModelSelector";
+import { FineTuningPanel } from "@/components/ui/FineTuningPanel";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default function Home() {
     const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [showFineTuning, setShowFineTuning] = useState(false);
     const {
         messages,
         conversations,
         currentConversationId,
+        selectedModel,
         isLoading,
         error,
         sendMessage,
@@ -22,6 +26,7 @@ export default function Home() {
         loadConversation,
         deleteConversation,
         submitFeedback,
+        setSelectedModel,
         clearError,
     } = useChat();
 
@@ -86,11 +91,27 @@ export default function Home() {
                         </div>
                     </div>
 
-                    {/* Right side */}
-                    <div className="flex items-center gap-2">
+                    {/* Right side - Model Selector & Fine-tuning */}
+                    <div className="flex items-center gap-3">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setShowFineTuning(!showFineTuning)}
+                            className={cn(
+                                "flex items-center gap-2",
+                                showFineTuning && "bg-purple-500/20 text-purple-300"
+                            )}
+                        >
+                            <Sparkles className="h-4 w-4" />
+                            <span className="hidden sm:inline">Fine-tune</span>
+                        </Button>
+                        <ModelSelector
+                            selectedModel={selectedModel}
+                            onModelChange={setSelectedModel}
+                        />
                         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-dark-800">
                             <div className="w-2 h-2 rounded-full bg-green-500" />
-                            <span className="text-xs text-dark-400">Scio Ready</span>
+                            <span className="text-xs text-dark-400">Ready</span>
                         </div>
                     </div>
                 </header>
@@ -111,10 +132,34 @@ export default function Home() {
                     </div>
                 )}
 
+                {/* Fine-tuning Panel (Slide-over) */}
+                {showFineTuning && (
+                    <div className="absolute right-0 top-14 bottom-0 w-96 z-40 bg-dark-900/95 backdrop-blur-xl border-l border-dark-700 shadow-2xl overflow-y-auto animate-slide-in">
+                        <div className="p-4">
+                            <div className="flex items-center justify-between mb-4">
+                                <h2 className="text-lg font-semibold text-white">Fine-tuning</h2>
+                                <button
+                                    onClick={() => setShowFineTuning(false)}
+                                    className="p-2 rounded-lg hover:bg-dark-700"
+                                >
+                                    <X className="h-4 w-4 text-dark-400" />
+                                </button>
+                            </div>
+                            <FineTuningPanel
+                                onModelCreated={(name) => {
+                                    setSelectedModel(name);
+                                    setShowFineTuning(false);
+                                }}
+                            />
+                        </div>
+                    </div>
+                )}
+
                 {/* Chat area */}
                 <ChatContainer
                     messages={messages}
                     isLoading={isLoading}
+                    selectedModel={selectedModel}
                     onFeedback={submitFeedback}
                     onSuggestionClick={handleSuggestionClick}
                 />

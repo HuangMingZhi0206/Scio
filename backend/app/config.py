@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     
     # Ollama
     ollama_host: str = "http://localhost:11434"
-    ollama_model: str = "llama3:8b"
+    ollama_model: str = "llama3.2:3b"
     
     # Embedding Model
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"

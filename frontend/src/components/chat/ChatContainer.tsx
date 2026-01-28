@@ -9,6 +9,7 @@ import { Bot, Wifi, Printer, Key, Terminal, HelpCircle } from "lucide-react";
 interface ChatContainerProps {
     messages: ChatMessageType[];
     isLoading?: boolean;
+    selectedModel?: string;
     onFeedback?: (messageId: string, feedback: "thumbs_up" | "thumbs_down") => void;
     onSuggestionClick?: (suggestion: string) => void;
 }
@@ -39,6 +40,7 @@ const SUGGESTIONS = [
 export function ChatContainer({
     messages,
     isLoading,
+    selectedModel,
     onFeedback,
     onSuggestionClick,
 }: ChatContainerProps) {
@@ -55,7 +57,7 @@ export function ChatContainer({
     return (
         <div className="flex-1 relative overflow-hidden">
             {isEmpty ? (
-                <WelcomeScreen onSuggestionClick={onSuggestionClick} />
+                <WelcomeScreen onSuggestionClick={onSuggestionClick} selectedModel={selectedModel} />
             ) : (
                 <ScrollArea className="h-full" ref={scrollRef}>
                     <div className="max-w-3xl mx-auto px-4 py-6 space-y-6">
@@ -90,9 +92,16 @@ export function ChatContainer({
 
 interface WelcomeScreenProps {
     onSuggestionClick?: (suggestion: string) => void;
+    selectedModel?: string;
 }
 
-function WelcomeScreen({ onSuggestionClick }: WelcomeScreenProps) {
+function WelcomeScreen({ onSuggestionClick, selectedModel }: WelcomeScreenProps) {
+    const getModelDisplayName = (model?: string) => {
+        if (!model) return "Llama 3";
+        if (model.includes("llama3.2")) return "Llama 3.2";
+        if (model.includes("llama3")) return "Llama 3";
+        return model.split(":")[0];
+    };
     return (
         <div className="h-full flex flex-col items-center justify-center px-4">
             {/* Logo and title */}
@@ -141,10 +150,9 @@ function WelcomeScreen({ onSuggestionClick }: WelcomeScreenProps) {
                 ))}
             </div>
 
-            {/* Status indicator */}
             <div className="mt-8 flex items-center gap-2 text-xs text-dark-500">
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                <span>Powered by Llama 3 • Knowledge base ready</span>
+                <span>Powered by {getModelDisplayName(selectedModel)} • Knowledge base ready</span>
             </div>
         </div>
     );

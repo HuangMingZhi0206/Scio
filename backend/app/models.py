@@ -26,6 +26,7 @@ class ChatRequest(BaseModel):
     """Chat message request."""
     message: str = Field(..., min_length=1, max_length=4000, description="User message")
     conversation_id: Optional[str] = Field(None, description="Existing conversation ID")
+    model: Optional[str] = Field(None, description="Ollama model to use (e.g., llama3.2:3b, llama3)")
 
 
 class FeedbackRequest(BaseModel):

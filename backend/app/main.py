@@ -8,7 +8,7 @@ from contextlib import asynccontextmanager
 from app.config import get_settings
 from app.database import init_db
 from app.models import HealthResponse
-from app.routers import chat, knowledge
+from app.routers import chat, knowledge, finetune
 
 settings = get_settings()
 
@@ -70,6 +70,7 @@ app.add_middleware(
 # Include routers
 app.include_router(chat.router)
 app.include_router(knowledge.router)
+app.include_router(finetune.router)
 
 
 @app.get("/", tags=["Root"])
