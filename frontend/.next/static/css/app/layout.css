@@ -937,8 +937,8 @@ video {
 .min-w-0{
   min-width: 0px;
 }
-.min-w-\[140px\]{
-  min-width: 140px;
+.min-w-\[180px\]{
+  min-width: 180px;
 }
 .max-w-2xl{
   max-width: 42rem;
@@ -1366,9 +1366,6 @@ video {
 .bg-white{
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
-}
-.bg-\[url\(\'\/grid\.svg\'\)\]{
-  background-image: url('/grid.svg');
 }
 .bg-gradient-to-br{
   background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));

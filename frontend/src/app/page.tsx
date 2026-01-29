@@ -9,7 +9,7 @@ import {
     Zap,
     BookOpen,
     ArrowRight,
-    CheckCircle,
+    CheckCircle,    
     Sparkles,
     Server,
     Cpu,
