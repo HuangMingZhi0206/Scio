@@ -18,6 +18,7 @@ from app.models import (
 )
 from app.services.rag import get_rag_service
 from app.services.llm import get_llm_service
+from app.services.gemini import get_gemini_service
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 
@@ -25,15 +26,23 @@ router = APIRouter(prefix="/chat", tags=["Chat"])
 @router.get("/models")
 async def list_available_models():
     """
-    List available Ollama models.
+    List available models (Ollama + Gemini).
     """
+    available_models = []
+    
+    # Add Gemini models first (cloud models)
+    gemini_models = [
+        {"name": "models/gemini-2.0-flash", "size": 0, "modified_at": "", "provider": "gemini"},
+        {"name": "models/gemini-2.5-flash", "size": 0, "modified_at": "", "provider": "gemini"},
+        {"name": "models/gemini-flash-latest", "size": 0, "modified_at": "", "provider": "gemini"},
+    ]
+    available_models.extend(gemini_models)
+    
+    # Add Ollama models
     try:
         result = ollama.list()
-        available_models = []
-        # ollama.list() returns an object with .models attribute containing Model objects
         models_list = result.models if hasattr(result, 'models') else result.get('models', [])
         for model in models_list:
-            # Model can be an object with attributes or a dict
             if hasattr(model, 'model'):
                 model_name = model.model
                 model_size = getattr(model, 'size', 0) or 0
@@ -47,11 +56,13 @@ async def list_available_models():
                 available_models.append({
                     "name": model_name,
                     "size": model_size,
-                    "modified_at": modified_at
+                    "modified_at": modified_at,
+                    "provider": "ollama"
                 })
-        return {"models": available_models}
     except Exception as e:
-        return {"models": [], "error": str(e)}
+        print(f"Ollama list error: {e}")
+    
+    return {"models": available_models}
 
 
 @router.post("", response_model=ChatResponse)

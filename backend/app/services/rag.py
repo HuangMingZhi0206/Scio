@@ -7,6 +7,7 @@ from functools import lru_cache
 from app.config import get_settings, CRITICAL_KEYWORDS
 from app.services.vectordb import get_vectordb_service
 from app.services.llm import get_llm_service
+from app.services.gemini import get_gemini_service
 from app.models import SourceDocument
 
 settings = get_settings()
@@ -25,6 +26,7 @@ class RAGService:
     def __init__(self):
         self.vectordb = get_vectordb_service()
         self.llm = get_llm_service()
+        self.gemini = get_gemini_service()
         self.top_k = settings.top_k_results
     
     def detect_critical_issue(self, text: str) -> bool:
@@ -110,13 +112,21 @@ class RAGService:
         # Retrieve relevant context
         context, sources = self.retrieve(query)
         
-        # Generate response
-        response = self.llm.generate(
-            user_message=query,
-            context=context,
-            conversation_history=conversation_history,
-            model=model
-        )
+        # Generate response - use Gemini if model contains 'gemini'
+        if model and 'gemini' in model:
+            response = self.gemini.generate(
+                user_message=query,
+                context=context,
+                conversation_history=conversation_history,
+                model=model
+            )
+        else:
+            response = self.llm.generate(
+                user_message=query,
+                context=context,
+                conversation_history=conversation_history,
+                model=model
+            )
         
         # Add critical warning if needed
         if is_critical:
