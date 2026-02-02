@@ -10,6 +10,12 @@ from transformers import (
 )
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 from trl import SFTTrainer
+import sys
+import os
+
+# Add parent directory to path to allow importing app
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from app.config import SYSTEM_PROMPT
 
 # --- Configuration ---
 # Use a pre-quantized 4-bit model directly for maximum memory efficiency
@@ -36,7 +42,9 @@ def train():
     
     # Create the prompt format similar to the notebook
     def format_instruction(row):
-        return f"""### User: What does error code {row['Code']} mean?
+        return f"""### System: {SYSTEM_PROMPT}
+
+### User: What does error code {row['Code']} mean?
 
 ### Assistant: Error {row['Code']} corresponds to: {row['Description']}. It is classified under {row['Category']}."""
 

@@ -10,7 +10,7 @@ from typing import Optional, List, Dict, Any
 from datetime import datetime
 import ollama
 
-from app.config import get_settings
+from app.config import get_settings, SYSTEM_PROMPT
 
 settings = get_settings()
 
@@ -32,7 +32,7 @@ class FineTuneService:
         num_ctx: int = 4096
     ) -> str:
         """Generate Modelfile content with custom parameters."""
-        system_prompt = custom_prompt or self._get_default_system_prompt()
+        system_prompt = custom_prompt or SYSTEM_PROMPT
         
         return f'''FROM {base_model}
 
@@ -46,33 +46,7 @@ PARAMETER num_ctx {num_ctx}
 SYSTEM """{system_prompt}"""
 '''
     
-    def _get_default_system_prompt(self) -> str:
-        """Get default IT Helpdesk system prompt."""
-        return """You are SCIO, an expert IT Helpdesk Assistant specialized in technical support.
 
-## Your Expertise:
-- Computer hardware troubleshooting and maintenance
-- Operating systems (Windows, Linux, macOS)
-- Networking and connectivity issues
-- Software installation and configuration
-- Error code interpretation
-- Security and data protection
-- IT best practices
-
-## Response Guidelines:
-1. Be concise and professional
-2. Provide step-by-step solutions when applicable
-3. Explain technical concepts in simple terms
-4. Always prioritize data safety
-5. Recommend consulting IT professionals for complex hardware issues
-
-## Important Rules:
-- ONLY answer IT/Technology related questions
-- For non-IT topics, politely redirect to appropriate resources
-- Never provide medical, legal, or financial advice
-- When unsure, recommend seeking professional IT support
-
-You are helpful, accurate, and focused on solving IT problems efficiently."""
     
     def create_model(
         self,
