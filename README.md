@@ -41,8 +41,127 @@ ollama pull llama3:8b
 ```
 
 Verify Ollama is running:
+
 ```bash
 ollama list
+```
+
+---
+
+## 📦 Dependencies & Cross-Platform Compatibility
+
+This section ensures the project runs smoothly on any computer.
+
+### Required Versions
+
+| Component   | Required Version | Notes                                                         |
+| ----------- | ---------------- | ------------------------------------------------------------- |
+| **Python**  | 3.10 - 3.12      | Python 3.13+ may have compatibility issues with some packages |
+| **Node.js** | 18.x or 20.x LTS | Use LTS versions for stability                                |
+| **npm**     | 9.x or 10.x      | Comes with Node.js                                            |
+| **Ollama**  | Latest           | Required for LLM inference                                    |
+
+### Backend Dependencies (Python)
+
+All Python dependencies are pinned to specific versions in `backend/requirements.txt`:
+
+```
+fastapi==0.109.2
+uvicorn[standard]==0.27.1
+langchain==0.1.6
+chromadb==0.4.22
+sentence-transformers==2.3.1
+ollama==0.1.6
+# ... and more
+```
+
+### Frontend Dependencies (Node.js)
+
+All frontend dependencies are pinned in `frontend/package.json`. The `package-lock.json` file ensures exact versions are installed.
+
+### ⚠️ Troubleshooting Common Dependency Issues
+
+<details>
+<summary><strong>🔴 ChromaDB Installation Error (Microsoft Visual C++ 14.0 required)</strong></summary>
+
+This error occurs on Windows when building native extensions:
+
+```
+error: Microsoft Visual C++ 14.0 or greater is required
+```
+
+**Solution:**
+
+1. Download and install [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
+2. During installation, select **"Desktop development with C++"**
+3. After installation, restart your terminal and try again:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+</details>
+
+<details>
+<summary><strong>🔴 Package version conflicts</strong></summary>
+
+If you encounter version conflicts:
+
+```bash
+# Clear pip cache and reinstall
+pip cache purge
+pip install -r requirements.txt --force-reinstall
+```
+
+</details>
+
+<details>
+<summary><strong>🔴 Node.js package issues</strong></summary>
+
+If npm packages fail to install:
+
+```bash
+# Clear npm cache
+npm cache clean --force
+
+# Delete node_modules and reinstall
+rm -rf node_modules package-lock.json
+npm install
+```
+
+</details>
+
+<details>
+<summary><strong>🔴 Sentence-transformers or PyTorch issues</strong></summary>
+
+If sentence-transformers fails to download models:
+
+1. Ensure you have a stable internet connection
+2. Check if your firewall blocks Hugging Face URLs
+3. Try installing PyTorch separately first:
+   ```bash
+   pip install torch torchvision torchaudio
+   ```
+
+</details>
+
+### 🔄 Regenerating Lock Files (For Developers)
+
+If you update dependencies, regenerate lock files to ensure consistency:
+
+**Backend (Python):**
+
+```bash
+cd backend
+pip freeze > requirements.txt
+```
+
+**Frontend (Node.js):**
+
+```bash
+cd frontend
+rm package-lock.json
+npm install
+# This creates a fresh package-lock.json
 ```
 
 ---
@@ -88,6 +207,7 @@ npm install
 ### Step 1: Start Ollama
 
 Make sure Ollama is running with the Llama 3 model:
+
 ```bash
 ollama run llama3:8b
 ```
@@ -116,6 +236,7 @@ API docs at: http://localhost:8000/docs
 ### Step 4: Start Frontend Server
 
 Open a new terminal:
+
 ```bash
 cd frontend
 npm run dev
@@ -195,30 +316,30 @@ CHUNK_SIZE=800         # Text chunk size
 
 ## 🧪 API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/chat` | Send a message |
-| GET | `/chat/conversations` | List conversations |
-| GET | `/chat/conversations/{id}` | Get conversation |
+| Method | Endpoint                   | Description         |
+| ------ | -------------------------- | ------------------- |
+| POST   | `/chat`                    | Send a message      |
+| GET    | `/chat/conversations`      | List conversations  |
+| GET    | `/chat/conversations/{id}` | Get conversation    |
 | DELETE | `/chat/conversations/{id}` | Delete conversation |
-| POST | `/chat/feedback` | Submit feedback |
-| POST | `/knowledge/ingest/sync` | Ingest data |
-| GET | `/knowledge/stats` | Get KB stats |
-| GET | `/health` | Health check |
+| POST   | `/chat/feedback`           | Submit feedback     |
+| POST   | `/knowledge/ingest/sync`   | Ingest data         |
+| GET    | `/knowledge/stats`         | Get KB stats        |
+| GET    | `/health`                  | Health check        |
 
 ---
 
 ## 🎨 Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| **LLM** | Ollama + Llama 3 8B |
-| **Embeddings** | sentence-transformers/all-MiniLM-L6-v2 |
-| **Vector DB** | ChromaDB |
-| **Backend** | FastAPI + LangChain |
-| **Frontend** | Next.js 14 + TypeScript |
-| **Styling** | Tailwind CSS + Glassmorphism |
-| **UI Components** | Radix UI |
+| Layer             | Technology                             |
+| ----------------- | -------------------------------------- |
+| **LLM**           | Ollama + Llama 3 8B                    |
+| **Embeddings**    | sentence-transformers/all-MiniLM-L6-v2 |
+| **Vector DB**     | ChromaDB                               |
+| **Backend**       | FastAPI + LangChain                    |
+| **Frontend**      | Next.js 14 + TypeScript                |
+| **Styling**       | Tailwind CSS + Glassmorphism           |
+| **UI Components** | Radix UI                               |
 
 ---
 

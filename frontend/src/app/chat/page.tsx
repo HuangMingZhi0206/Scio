@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Menu, X, AlertCircle, Sparkles } from "lucide-react";
 import { useChat } from "@/hooks/useChat";
@@ -8,11 +8,12 @@ import { Sidebar } from "@/components/sidebar/Sidebar";
 import { ChatContainer } from "@/components/chat/ChatContainer";
 import { ChatInput } from "@/components/chat/ChatInput";
 import { ModelSelector } from "@/components/ui/ModelSelector";
-import { FineTuningPanel } from "@/components/ui/FineTuningPanel";
+
 import { SearchPopup } from "@/components/ui/SearchPopup";
 import { ProjectsDashboard } from "@/components/ProjectsDashboard";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Project } from "@/lib/types";
 
 // Dynamic import PixelBlast to avoid SSR issues
 const PixelBlast = dynamic(() => import("@/components/ui/PixelBlast"), {
@@ -20,10 +21,16 @@ const PixelBlast = dynamic(() => import("@/components/ui/PixelBlast"), {
 });
 
 export default function Home() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [showFineTuning, setShowFineTuning] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true); // Mobile sidebar
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false); // Desktop sidebar
+
   const [showSearchPopup, setShowSearchPopup] = useState(false);
   const [currentView, setCurrentView] = useState<"chat" | "projects">("chat");
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [navigatedProject, setNavigatedProject] = useState<Project | null>(
+    null,
+  );
+  const [isMounted, setIsMounted] = useState(false);
   const {
     messages,
     conversations,
@@ -40,6 +47,50 @@ export default function Home() {
     setSelectedModel,
     clearError,
   } = useChat();
+
+  // Load projects from localStorage
+  useEffect(() => {
+    setIsMounted(true);
+    const saved = localStorage.getItem("scio_projects");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // Convert date strings back to Date objects
+        const withDates = parsed.map((p: any) => ({
+          ...p,
+          createdAt: new Date(p.createdAt),
+          updatedAt: new Date(p.updatedAt),
+        }));
+        setProjects(withDates);
+      } catch (e) {
+        console.error("Failed to load projects", e);
+      }
+    }
+
+    // Load sidebar state
+    const savedSidebar = localStorage.getItem("scio_sidebar_collapsed");
+    if (savedSidebar) {
+      setSidebarCollapsed(savedSidebar === "true");
+    }
+  }, []);
+
+  const handleUpdateProjects = useCallback(
+    (newProjects: Project[]) => {
+      setProjects(newProjects);
+      if (isMounted) {
+        localStorage.setItem("scio_projects", JSON.stringify(newProjects));
+      }
+    },
+    [isMounted],
+  );
+
+  const handleToggleSidebar = useCallback(() => {
+    setSidebarCollapsed((prev) => {
+      const newState = !prev;
+      localStorage.setItem("scio_sidebar_collapsed", String(newState));
+      return newState;
+    });
+  }, []);
 
   const handleSuggestionClick = useCallback(
     (suggestion: string) => {
@@ -72,6 +123,19 @@ export default function Home() {
     [loadConversation],
   );
 
+  const handleStartChatFromProject = useCallback(
+    (message: string, projectName?: string) => {
+      setCurrentView("chat");
+      startNewConversation();
+      // Send the message with project context if available
+      const fullMessage = projectName
+        ? `[Project: ${projectName}] ${message}`
+        : message;
+      sendMessage(fullMessage);
+    },
+    [startNewConversation, sendMessage],
+  );
+
   return (
     <div className="h-screen flex overflow-hidden relative">
       {/* Global PixelBlast Background - visible behind transparent elements */}
@@ -100,8 +164,9 @@ export default function Home() {
       {/* Sidebar */}
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-50 lg:relative lg:z-10 transition-transform duration-300",
+          "fixed inset-y-0 left-0 z-50 lg:relative lg:z-10 transition-all duration-300",
           sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+          sidebarCollapsed ? "lg:w-16" : "lg:w-64",
         )}
       >
         {/* Mobile close button */}
@@ -122,6 +187,13 @@ export default function Home() {
           onViewChange={handleViewChange}
           onSearchClick={handleSearchClick}
           currentView={currentView}
+          isCollapsed={sidebarCollapsed}
+          onToggleCollapse={handleToggleSidebar}
+          starredProjects={projects.filter((p) => p.isStarred)}
+          onSelectProject={(project) => {
+            setNavigatedProject(project);
+            setCurrentView("projects");
+          }}
         />
       </div>
 
@@ -160,20 +232,9 @@ export default function Home() {
           </div>
 
           {/* Right side - Model Selector & Fine-tuning (only in chat view) */}
+          {/* Right side - Model Selector (only in chat view) */}
           {currentView === "chat" && (
             <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowFineTuning(!showFineTuning)}
-                className={cn(
-                  "flex items-center gap-2 rounded-lg",
-                  showFineTuning && "bg-cyan-500/20 text-cyan-300",
-                )}
-              >
-                <Sparkles className="h-4 w-4" />
-                <span className="hidden sm:inline">Fine-tune</span>
-              </Button>
               <ModelSelector
                 selectedModel={selectedModel}
                 onModelChange={setSelectedModel}
@@ -202,36 +263,16 @@ export default function Home() {
           </div>
         )}
 
-        {/* Fine-tuning Panel (Slide-over) */}
-        {showFineTuning && (
-          <div className="absolute right-0 top-14 bottom-0 w-96 z-40 bg-dark-900/95 backdrop-blur-xl border-l border-dark-700 shadow-2xl overflow-y-auto animate-slide-in">
-            <div className="p-4">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-white">
-                  Fine-tuning
-                </h2>
-                <button
-                  onClick={() => setShowFineTuning(false)}
-                  className="p-2 rounded-lg hover:bg-dark-700"
-                >
-                  <X className="h-4 w-4 text-dark-400" />
-                </button>
-              </div>
-              <FineTuningPanel
-                onModelCreated={(name) => {
-                  setSelectedModel(name);
-                  setShowFineTuning(false);
-                }}
-              />
-            </div>
-          </div>
-        )}
-
         {/* Main view area */}
         {currentView === "projects" ? (
           <ProjectsDashboard
             onNewProject={handleNewProject}
             onBackToChat={() => setCurrentView("chat")}
+            onStartChat={handleStartChatFromProject}
+            projects={projects}
+            onUpdateProjects={handleUpdateProjects}
+            selectedProjectExternal={navigatedProject}
+            onClearSelectedProject={() => setNavigatedProject(null)}
           />
         ) : (
           <>
