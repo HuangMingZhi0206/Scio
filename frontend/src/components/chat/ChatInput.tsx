@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, KeyboardEvent } from "react";
-import { Send, Loader2, Paperclip, Mic, Sparkles } from "lucide-react";
+import { Send, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -55,22 +55,10 @@ export function ChatInput({
       <div className="relative bg-dark-900/80 rounded-2xl border border-dark-700/60 shadow-xl shadow-black/20 backdrop-blur-sm overflow-hidden transition-all duration-200 focus-within:border-cyan-500/50 focus-within:shadow-cyan-500/10">
         {/* Top action bar */}
         <div className="flex items-center gap-1 px-3 pt-3">
-          <button
-            className="p-2 rounded-lg text-dark-400 hover:text-dark-200 hover:bg-dark-800 transition-colors"
-            title="Attach file"
-          >
-            <Paperclip className="w-4 h-4" />
-          </button>
-          <button
-            className="p-2 rounded-lg text-dark-400 hover:text-dark-200 hover:bg-dark-800 transition-colors"
-            title="Voice input"
-          >
-            <Mic className="w-4 h-4" />
-          </button>
           <div className="flex-1" />
           <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-dark-800/60 text-[10px] text-dark-500">
             <Sparkles className="w-3 h-3" />
-            <span>AI Powered</span>
+            <span>IT Helpdesk AI</span>
           </div>
         </div>
 

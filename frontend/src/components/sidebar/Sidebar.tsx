@@ -8,15 +8,11 @@ import {
   Pin,
   Search,
   FolderOpen,
-  FileText,
-  Settings,
-  Bot,
   ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils";
 import { Conversation } from "@/lib/api";
-import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Tooltip,
@@ -32,18 +28,11 @@ interface SidebarProps {
   onSelectConversation: (id: string) => void;
   onDeleteConversation: (id: string) => void;
   onPinConversation: (id: string) => void;
+  onViewChange?: (view: "chat" | "projects") => void;
+  onSearchClick?: () => void;
+  currentView?: "chat" | "projects";
   isCollapsed?: boolean;
 }
-
-// Menu sections matching reference design
-const MENU_SECTIONS = [
-  { icon: FolderOpen, label: "Projects", hasChevron: true },
-  { icon: FileText, label: "New Project", hasChevron: true },
-  { icon: Bot, label: "Gullint" },
-  { icon: FileText, label: "General Knowledge" },
-  { icon: FileText, label: "Sheets" },
-  { icon: Settings, label: "Setting", hasChevron: true },
-];
 
 export function Sidebar({
   conversations,
@@ -52,6 +41,9 @@ export function Sidebar({
   onSelectConversation,
   onDeleteConversation,
   onPinConversation,
+  onViewChange,
+  onSearchClick,
+  currentView = "chat",
   isCollapsed = false,
 }: SidebarProps) {
   // Separate pinned and regular conversations
@@ -59,6 +51,24 @@ export function Sidebar({
   const recentConversations = conversations
     .filter((c) => !c.is_pinned)
     .slice(0, 8);
+
+  const handleSearchClick = () => {
+    onSearchClick?.();
+  };
+
+  const handleProjectsClick = () => {
+    onViewChange?.("projects");
+  };
+
+  const handleNewChatClick = () => {
+    onViewChange?.("chat");
+    onNewConversation();
+  };
+
+  const handleSelectConversation = (id: string) => {
+    onViewChange?.("chat");
+    onSelectConversation(id);
+  };
 
   return (
     <TooltipProvider>
@@ -84,17 +94,19 @@ export function Sidebar({
           </div>
         </div>
 
-        {/* Search bar */}
+        {/* Search bar - clickable to open popup */}
         {!isCollapsed && (
           <div className="px-3 py-2">
-            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-dark-900/60 border border-dark-800/50">
+            <button
+              onClick={handleSearchClick}
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-dark-900/60 border border-dark-800/50 hover:border-dark-700 transition-colors"
+            >
               <Search className="w-4 h-4 text-dark-500" />
-              <input
-                type="text"
-                placeholder="Search"
-                className="bg-transparent text-sm text-dark-300 placeholder:text-dark-600 outline-none flex-1"
-              />
-            </div>
+              <span className="text-sm text-dark-500">Search</span>
+              <span className="ml-auto text-xs text-dark-600 bg-dark-800 px-1.5 py-0.5 rounded">
+                ⌘K
+              </span>
+            </button>
           </div>
         )}
 
@@ -108,27 +120,36 @@ export function Sidebar({
 
           {/* New Chat button */}
           <button
-            onClick={onNewConversation}
-            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-dark-300 hover:bg-dark-800/50 hover:text-white transition-colors"
+            onClick={handleNewChatClick}
+            className={cn(
+              "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-colors",
+              currentView === "chat" && !currentConversationId
+                ? "bg-dark-800/60 text-white"
+                : "text-dark-300 hover:bg-dark-800/50 hover:text-white",
+            )}
           >
             <Plus className="w-4 h-4" />
             {!isCollapsed && <span className="text-sm">New Chat</span>}
           </button>
 
-          {/* Menu items */}
-          {!isCollapsed &&
-            MENU_SECTIONS.slice(0, 2).map((item, index) => (
-              <button
-                key={index}
-                className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-dark-400 hover:bg-dark-800/50 hover:text-dark-200 transition-colors"
-              >
-                <div className="flex items-center gap-2.5">
-                  <item.icon className="w-4 h-4" />
-                  <span className="text-sm">{item.label}</span>
-                </div>
-                {item.hasChevron && <ChevronDown className="w-3 h-3" />}
-              </button>
-            ))}
+          {/* Projects button - combined from Projects + New Project */}
+          {!isCollapsed && (
+            <button
+              onClick={handleProjectsClick}
+              className={cn(
+                "w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors",
+                currentView === "projects"
+                  ? "bg-dark-800/60 text-white"
+                  : "text-dark-400 hover:bg-dark-800/50 hover:text-dark-200",
+              )}
+            >
+              <div className="flex items-center gap-2.5">
+                <FolderOpen className="w-4 h-4" />
+                <span className="text-sm">Projects</span>
+              </div>
+              <ChevronDown className="w-3 h-3" />
+            </button>
+          )}
         </div>
 
         {/* Chat section - Recent conversations */}
@@ -148,9 +169,12 @@ export function Sidebar({
                 <ConversationItem
                   key={conversation.id}
                   conversation={conversation}
-                  isActive={conversation.id === currentConversationId}
+                  isActive={
+                    conversation.id === currentConversationId &&
+                    currentView === "chat"
+                  }
                   isCollapsed={isCollapsed}
-                  onSelect={() => onSelectConversation(conversation.id)}
+                  onSelect={() => handleSelectConversation(conversation.id)}
                   onDelete={() => onDeleteConversation(conversation.id)}
                   onPin={() => onPinConversation(conversation.id)}
                 />
@@ -159,9 +183,12 @@ export function Sidebar({
                 <ConversationItem
                   key={conversation.id}
                   conversation={conversation}
-                  isActive={conversation.id === currentConversationId}
+                  isActive={
+                    conversation.id === currentConversationId &&
+                    currentView === "chat"
+                  }
                   isCollapsed={isCollapsed}
-                  onSelect={() => onSelectConversation(conversation.id)}
+                  onSelect={() => handleSelectConversation(conversation.id)}
                   onDelete={() => onDeleteConversation(conversation.id)}
                   onPin={() => onPinConversation(conversation.id)}
                 />
@@ -176,7 +203,7 @@ export function Sidebar({
         </div>
 
         {/* Bottom section - Upgrade prompt */}
-        {!isCollapsed && (
+        {/* {!isCollapsed && (
           <div className="p-3 border-t border-dark-800/30">
             <div className="p-3 rounded-xl bg-gradient-to-br from-cyan-500/10 to-purple-500/10 border border-cyan-500/20">
               <div className="flex items-center gap-1 mb-1">
@@ -198,7 +225,7 @@ export function Sidebar({
         )}
 
         {/* User profile */}
-        {!isCollapsed && (
+        {/* {!isCollapsed && (
           <div className="p-3 border-t border-dark-800/30">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-purple-500 flex items-center justify-center">
@@ -214,8 +241,8 @@ export function Sidebar({
               </div>
             </div>
           </div>
-        )}
-      </div>
+        )} */}
+      </div> 
     </TooltipProvider>
   );
 }

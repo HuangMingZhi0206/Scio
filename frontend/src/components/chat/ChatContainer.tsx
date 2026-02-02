@@ -6,19 +6,15 @@ import { ChatMessage as ChatMessageType } from "@/lib/api";
 import { ChatMessage } from "./ChatMessage";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-  Search,
-  Image,
-  Code,
-  FileText,
-  Briefcase,
-  Languages,
-  Youtube,
+  Wifi,
+  Monitor,
+  Lock,
+  Printer,
+  HardDrive,
+  Shield,
   Mail,
-  FileSearch,
-  Sparkles,
+  AlertTriangle,
   Send,
-  Mic,
-  Paperclip,
 } from "lucide-react";
 
 // Dynamic import PixelBlast to avoid SSR issues
@@ -37,46 +33,47 @@ interface ChatContainerProps {
   onSuggestionClick?: (suggestion: string) => void;
 }
 
-// Top row suggestions (action buttons in input)
-const INPUT_ACTIONS = [
-  { icon: Search, label: "Search", color: "text-dark-400" },
-  { icon: Image, label: "Create image", color: "text-dark-400" },
-];
-
-// Bottom suggestion pills
+// IT Helpdesk suggestion pills
 const SUGGESTIONS = [
   {
-    icon: Sparkles,
-    label: "AI script writer",
-    prompt: "Help me write a script for a presentation",
+    icon: Wifi,
+    label: "WiFi Issues",
+    prompt: "How do I troubleshoot WiFi connectivity problems?",
   },
-  { icon: Code, label: "Coding Assistant", prompt: "Help me debug my code" },
-  { icon: FileText, label: "Essay writer", prompt: "Help me write an essay" },
   {
-    icon: Briefcase,
-    label: "Business",
-    prompt: "Help me with business planning",
+    icon: Monitor,
+    label: "Screen Problems",
+    prompt: "My screen is flickering, how can I fix it?",
   },
-  { icon: Languages, label: "Translate", prompt: "Translate text for me" },
   {
-    icon: Youtube,
-    label: "YouTube summaries",
-    prompt: "Summarize a YouTube video",
+    icon: Lock,
+    label: "Password Reset",
+    prompt: "How do I reset my Windows password?",
+  },
+  {
+    icon: Printer,
+    label: "Printer Setup",
+    prompt: "How do I connect and set up a network printer?",
+  },
+  {
+    icon: HardDrive,
+    label: "Storage Issues",
+    prompt: "My computer is running out of storage space",
+  },
+  {
+    icon: Shield,
+    label: "Security Alert",
+    prompt: "How do I scan my computer for viruses?",
   },
   {
     icon: Mail,
-    label: "AI Email writing",
-    prompt: "Help me write a professional email",
+    label: "Email Setup",
+    prompt: "How do I configure Outlook email?",
   },
   {
-    icon: FileSearch,
-    label: "AI pdf chat",
-    prompt: "Help me analyze a PDF document",
-  },
-  {
-    icon: Sparkles,
-    label: "Research assistant",
-    prompt: "Help me research a topic",
+    icon: AlertTriangle,
+    label: "Blue Screen",
+    prompt: "I'm getting a blue screen error, what should I do?",
   },
 ];
 
@@ -195,33 +192,15 @@ function WelcomeScreen({
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Message AI chat..."
+              placeholder="Ask about WiFi, printers, password issues..."
               className="flex-1 bg-transparent text-white placeholder:text-dark-500 outline-none text-[15px]"
             />
-            <div className="flex items-center gap-1">
-              <button className="p-2 text-dark-400 hover:text-dark-200 transition-colors">
-                <Mic className="w-4 h-4" />
-              </button>
-              <button
-                onClick={handleSubmit}
-                className={`p-2 rounded-lg transition-all ${inputValue.trim() ? "bg-cyan-500 text-white" : "text-dark-400"}`}
-              >
-                <Send className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* Action buttons row */}
-          <div className="flex items-center gap-2 px-4 py-2 border-t border-dark-800/50">
-            {INPUT_ACTIONS.map((action, index) => (
-              <button
-                key={index}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-dark-800/60 text-dark-400 hover:text-dark-200 hover:bg-dark-700/60 transition-colors text-sm"
-              >
-                <action.icon className="w-4 h-4" />
-                <span>{action.label}</span>
-              </button>
-            ))}
+            <button
+              onClick={handleSubmit}
+              className={`p-2 rounded-lg transition-all ${inputValue.trim() ? "bg-cyan-500 text-white" : "text-dark-400"}`}
+            >
+              <Send className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </div>

@@ -42,7 +42,7 @@ const AnimatedBackground = () => (
       transparent={false}
     />
     {/* Overlay gradient for better text readability */}
-    <div className="absolute inset-0 bg-gradient-to-b from-dark-950/30 via-transparent to-dark-950/50 pointer-events-none" />
+    <div className="absolute inset-0 bg-gradient-to-b from-dark-950/60 via-dark-950/40 to-dark-950/70 pointer-events-none" />
   </div>
 );
 
@@ -70,7 +70,7 @@ const FeatureCard = ({
       {icon}
     </div>
     <h3 className="text-lg font-semibold text-white mb-2">{title}</h3>
-    <p className="text-dark-300 text-sm leading-relaxed">{description}</p>
+    <p className="text-slate-300 text-sm leading-relaxed">{description}</p>
     <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
   </div>
 );
@@ -88,7 +88,7 @@ const StatCard = ({ icon, value, label }: StatCardProps) => (
     <div className="text-3xl font-bold text-white mb-1 bg-gradient-to-r from-white to-accent-200 bg-clip-text text-transparent">
       {value}
     </div>
-    <div className="text-sm text-dark-300">{label}</div>
+    <div className="text-sm text-slate-300">{label}</div>
   </div>
 );
 
@@ -155,18 +155,18 @@ export default function HomePage() {
           </div>
 
           {/* Main heading */}
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            <span className="bg-gradient-to-r from-white via-white to-dark-400 bg-clip-text text-transparent">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight drop-shadow-lg">
+            <span className="bg-gradient-to-r from-white via-white to-slate-300 bg-clip-text text-transparent">
               Your AI-Powered
             </span>
             <br />
-            <span className="bg-gradient-to-r from-accent-400 via-accent-300 to-purple-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-cyan-400 via-cyan-300 to-purple-400 bg-clip-text text-transparent">
               IT Helpdesk
             </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-xl text-dark-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl text-slate-300 mb-12 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
             Get instant, accurate answers to your IT questions. Scio uses
             advanced RAG technology to provide expert-level support 24/7.
           </p>
@@ -183,7 +183,7 @@ export default function HomePage() {
             </Link>
             <Link
               href="#features"
-              className="flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 text-dark-200 font-semibold hover:bg-white/10 hover:border-white/20 transition-all"
+              className="flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 text-slate-200 font-semibold hover:bg-white/15 hover:border-white/30 transition-all"
             >
               <BookOpen className="w-5 h-5" />
               <span>Learn More</span>
@@ -199,7 +199,7 @@ export default function HomePage() {
                 <div className="w-8 h-8 rounded-lg bg-accent-500/20 flex items-center justify-center">
                   <MessageSquare className="w-4 h-4 text-accent-400" />
                 </div>
-                <span className="font-medium text-dark-200">
+                <span className="font-medium text-slate-200">
                   Scio Assistant
                 </span>
                 <span className="ml-auto flex items-center gap-1.5 text-xs text-green-400">
@@ -216,11 +216,11 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="flex justify-start">
-                  <div className="bg-dark-800 text-dark-200 px-4 py-3 rounded-2xl rounded-bl-md max-w-md text-sm">
+                  <div className="bg-dark-800/90 text-slate-200 px-4 py-3 rounded-2xl rounded-bl-md max-w-md text-sm">
                     <p className="mb-2">
                       I can help you with that! Here are the steps:
                     </p>
-                    <ol className="list-decimal list-inside space-y-1 text-dark-300">
+                    <ol className="list-decimal list-inside space-y-1 text-slate-300">
                       <li>Click Start → Settings → Accounts</li>
                       <li>Select "Sign-in options"</li>
                       <li>Click "Password" then "Change"</li>
@@ -266,11 +266,11 @@ export default function HomePage() {
       >
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            <span className="bg-gradient-to-r from-white to-dark-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent drop-shadow-md">
               Why Choose Scio?
             </span>
           </h2>
-          <p className="text-dark-400 max-w-2xl mx-auto">
+          <p className="text-slate-300 max-w-2xl mx-auto">
             Built with cutting-edge technology to provide the best IT support
             experience
           </p>
@@ -320,7 +320,7 @@ export default function HomePage() {
       <section className="relative z-10 max-w-7xl mx-auto px-6 py-20">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            <span className="bg-gradient-to-r from-white to-dark-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent drop-shadow-md">
               How It Works
             </span>
           </h2>
@@ -345,13 +345,13 @@ export default function HomePage() {
             },
           ].map((item, i) => (
             <div key={i} className="relative text-center">
-              <div className="text-6xl font-bold text-dark-800 mb-4">
+              <div className="text-6xl font-bold text-white/80 mb-4">
                 {item.step}
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">
                 {item.title}
               </h3>
-              <p className="text-dark-400">{item.desc}</p>
+              <p className="text-slate-300">{item.desc}</p>
               {i < 2 && (
                 <div className="hidden md:block absolute top-8 right-0 transform translate-x-1/2">
                   <ArrowRight className="w-6 h-6 text-dark-700" />
@@ -397,11 +397,11 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="relative z-10 border-t border-dark-800 py-8">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-dark-500">
+          <div className="flex items-center gap-2 text-slate-400">
             <MessageSquare className="w-4 h-4" />
-            <span className="text-sm">Scio IT Helpdesk © 2024</span>
+            <span className="text-sm">Scio IT Helpdesk © 2026</span>
           </div>
-          <div className="flex items-center gap-4 text-sm text-dark-500">
+          <div className="flex items-center gap-4 text-sm text-slate-400">
             <span>Powered by Ollama + RAG</span>
             <span className="flex items-center gap-1">
               <CheckCircle className="w-4 h-4 text-green-500" />
