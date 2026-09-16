@@ -26,6 +26,7 @@ export default function Home() {
     loadConversation,
     deleteConversation,
     pinConversation,
+    renameConversation,
     submitFeedback,
     setSelectedModel,
     clearError,
@@ -70,6 +71,7 @@ export default function Home() {
           onSelectConversation={loadConversation}
           onDeleteConversation={deleteConversation}
           onPinConversation={pinConversation}
+          onRenameConversation={renameConversation}
         />
       </div>
 

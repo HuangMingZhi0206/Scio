@@ -19,6 +19,7 @@ interface UseChatReturn {
     loadConversation: (conversationId: string) => Promise<void>;
     deleteConversation: (conversationId: string) => Promise<void>;
     pinConversation: (conversationId: string) => Promise<void>;
+    renameConversation: (conversationId: string, title: string) => Promise<void>;
     submitFeedback: (messageId: string, feedback: 'thumbs_up' | 'thumbs_down') => Promise<void>;
     refreshConversations: () => Promise<void>;
     setSelectedModel: (model: string) => void;
@@ -151,6 +152,16 @@ export function useChat(): UseChatReturn {
         }
     }, [refreshConversations]);
 
+    const renameConversation = useCallback(async (conversationId: string, title: string) => {
+        try {
+            await api.renameConversation(conversationId, title);
+            await refreshConversations();
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : "Failed to rename conversation";
+            setError(errorMessage);
+        }
+    }, [refreshConversations]);
+
     const clearError = useCallback(() => {
         setError(null);
     }, []);
@@ -167,6 +178,7 @@ export function useChat(): UseChatReturn {
         loadConversation,
         deleteConversation,
         pinConversation,
+        renameConversation,
         submitFeedback,
         refreshConversations,
         setSelectedModel,

@@ -137,6 +137,15 @@ export const api = {
         return handleResponse<{ success: boolean; is_pinned: boolean }>(response);
     },
 
+    async renameConversation(conversationId: string, title: string): Promise<{ title: string }> {
+        const response = await fetch(`${API_BASE}/chat/conversations/${conversationId}/rename`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title }),
+        });
+        return handleResponse<{ success: boolean; title: string }>(response);
+    },
+
     // Knowledge base endpoints
     async getKnowledgeStats(): Promise<KnowledgeStats> {
         const response = await fetch(`${API_BASE}/knowledge/stats`);

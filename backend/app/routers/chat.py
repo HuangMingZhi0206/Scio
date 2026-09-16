@@ -383,3 +383,29 @@ async def toggle_pin_conversation(
     db.commit()
     
     return {"success": True, "is_pinned": conversation.is_pinned}
+
+
+@router.patch("/conversations/{conversation_id}/rename")
+async def rename_conversation(
+    conversation_id: str,
+    body: dict,
+    db: Session = Depends(get_db)
+):
+    """
+    Rename a conversation.
+    """
+    conversation = db.query(ConversationDB).filter(
+        ConversationDB.id == conversation_id
+    ).first()
+    
+    if not conversation:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    
+    new_title = body.get("title", "").strip()
+    if not new_title:
+        raise HTTPException(status_code=400, detail="Title cannot be empty")
+    
+    conversation.title = new_title[:100]  # Limit title length
+    db.commit()
+    
+    return {"success": True, "title": conversation.title}

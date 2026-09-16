@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Plus,
   Trash2,
@@ -12,6 +12,8 @@ import {
   Settings,
   Bot,
   ChevronDown,
+  Pencil,
+  MoreHorizontal,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils";
@@ -32,6 +34,7 @@ interface SidebarProps {
   onSelectConversation: (id: string) => void;
   onDeleteConversation: (id: string) => void;
   onPinConversation: (id: string) => void;
+  onRenameConversation: (id: string, title: string) => void;
   isCollapsed?: boolean;
 }
 
@@ -52,6 +55,7 @@ export function Sidebar({
   onSelectConversation,
   onDeleteConversation,
   onPinConversation,
+  onRenameConversation,
   isCollapsed = false,
 }: SidebarProps) {
   // Separate pinned and regular conversations
@@ -153,6 +157,7 @@ export function Sidebar({
                   onSelect={() => onSelectConversation(conversation.id)}
                   onDelete={() => onDeleteConversation(conversation.id)}
                   onPin={() => onPinConversation(conversation.id)}
+                  onRename={(title) => onRenameConversation(conversation.id, title)}
                 />
               ))}
               {recentConversations.map((conversation) => (
@@ -164,6 +169,7 @@ export function Sidebar({
                   onSelect={() => onSelectConversation(conversation.id)}
                   onDelete={() => onDeleteConversation(conversation.id)}
                   onPin={() => onPinConversation(conversation.id)}
+                  onRename={(title) => onRenameConversation(conversation.id, title)}
                 />
               ))}
               {conversations.length === 0 && !isCollapsed && (
@@ -227,6 +233,7 @@ interface ConversationItemProps {
   onSelect: () => void;
   onDelete: () => void;
   onPin: () => void;
+  onRename: (title: string) => void;
 }
 
 function ConversationItem({
@@ -236,15 +243,86 @@ function ConversationItem({
   onSelect,
   onDelete,
   onPin,
+  onRename,
 }: ConversationItemProps) {
+  const [showMenu, setShowMenu] = useState(false);
+  const [menuPos, setMenuPos] = useState({ x: 0, y: 0 });
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [renameValue, setRenameValue] = useState(conversation.title);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Close context menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+    if (showMenu) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showMenu]);
+
+  // Focus input when renaming
+  useEffect(() => {
+    if (isRenaming && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [isRenaming]);
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setMenuPos({ x: e.clientX, y: e.clientY });
+    setShowMenu(true);
+  };
+
+  const handleMoreClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const rect = (e.target as HTMLElement).closest("button")?.getBoundingClientRect();
+    if (rect) {
+      setMenuPos({ x: rect.right, y: rect.top });
+    }
+    setShowMenu(true);
+  };
+
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
+    setShowMenu(false);
     onDelete();
   };
 
   const handlePin = (e: React.MouseEvent) => {
     e.stopPropagation();
+    setShowMenu(false);
     onPin();
+  };
+
+  const handleStartRename = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowMenu(false);
+    setRenameValue(conversation.title);
+    setIsRenaming(true);
+  };
+
+  const handleRenameSubmit = () => {
+    const trimmed = renameValue.trim();
+    if (trimmed && trimmed !== conversation.title) {
+      onRename(trimmed);
+    }
+    setIsRenaming(false);
+  };
+
+  const handleRenameKeyDown = (e: React.KeyboardEvent) => {
+    e.stopPropagation();
+    if (e.key === "Enter") {
+      handleRenameSubmit();
+    } else if (e.key === "Escape") {
+      setIsRenaming(false);
+    }
   };
 
   if (isCollapsed) {
@@ -272,45 +350,87 @@ function ConversationItem({
   }
 
   return (
-    <div
-      onClick={onSelect}
-      className={cn(
-        "group flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all",
-        isActive
-          ? "bg-dark-800/80 text-white"
-          : "text-dark-400 hover:bg-dark-800/50 hover:text-dark-200",
-      )}
-    >
-      {conversation.is_pinned ? (
-        <Pin className="w-3.5 h-3.5 text-cyan-400 flex-shrink-0" />
-      ) : (
-        <MessageSquare className="w-3.5 h-3.5 flex-shrink-0" />
-      )}
-      <span className="text-sm truncate flex-1">{conversation.title}</span>
+    <>
+      <div
+        onClick={onSelect}
+        onContextMenu={handleContextMenu}
+        className={cn(
+          "group flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all",
+          isActive
+            ? "bg-dark-800/80 text-white"
+            : "text-dark-400 hover:bg-dark-800/50 hover:text-dark-200",
+        )}
+      >
+        {conversation.is_pinned ? (
+          <Pin className="w-3.5 h-3.5 text-cyan-400 flex-shrink-0" />
+        ) : (
+          <MessageSquare className="w-3.5 h-3.5 flex-shrink-0" />
+        )}
 
-      {/* Hover actions */}
-      <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-        <button
-          onClick={handlePin}
-          className="p-1 rounded hover:bg-dark-700 transition-colors"
-          title={conversation.is_pinned ? "Unpin" : "Pin"}
-        >
-          <Pin
-            className={cn(
-              "w-3 h-3",
-              conversation.is_pinned ? "text-cyan-400" : "text-dark-500",
-            )}
+        {isRenaming ? (
+          <input
+            ref={inputRef}
+            type="text"
+            value={renameValue}
+            onChange={(e) => setRenameValue(e.target.value)}
+            onKeyDown={handleRenameKeyDown}
+            onBlur={handleRenameSubmit}
+            onClick={(e) => e.stopPropagation()}
+            className="flex-1 text-sm bg-dark-800 border border-cyan-500/50 rounded px-1.5 py-0.5 text-white outline-none focus:ring-1 focus:ring-cyan-500/50 min-w-0"
           />
-        </button>
-        <button
-          onClick={handleDelete}
-          className="p-1 rounded hover:bg-dark-700 transition-colors"
-          title="Delete"
-        >
-          <Trash2 className="w-3 h-3 text-dark-500 hover:text-red-400" />
-        </button>
+        ) : (
+          <span className="text-sm truncate flex-1">{conversation.title}</span>
+        )}
+
+        {/* More button - visible on hover */}
+        {!isRenaming && (
+          <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button
+              onClick={handleMoreClick}
+              className="p-1 rounded hover:bg-dark-700 transition-colors"
+              title="More options"
+            >
+              <MoreHorizontal className="w-3.5 h-3.5 text-dark-500" />
+            </button>
+          </div>
+        )}
       </div>
-    </div>
+
+      {/* Context menu */}
+      {showMenu && (
+        <div
+          ref={menuRef}
+          className="fixed z-[100] min-w-[160px] py-1.5 rounded-lg bg-dark-900 border border-dark-700/80 shadow-xl shadow-black/40 backdrop-blur-xl animate-fade-in"
+          style={{
+            left: Math.min(menuPos.x, window.innerWidth - 180),
+            top: Math.min(menuPos.y, window.innerHeight - 160),
+          }}
+        >
+          <button
+            onClick={handlePin}
+            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-dark-300 hover:bg-dark-800/80 hover:text-white transition-colors"
+          >
+            <Pin className={cn("w-3.5 h-3.5", conversation.is_pinned ? "text-cyan-400" : "")} />
+            {conversation.is_pinned ? "Unpin" : "Pin"}
+          </button>
+          <button
+            onClick={handleStartRename}
+            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-dark-300 hover:bg-dark-800/80 hover:text-white transition-colors"
+          >
+            <Pencil className="w-3.5 h-3.5" />
+            Rename
+          </button>
+          <div className="my-1 border-t border-dark-700/50" />
+          <button
+            onClick={handleDelete}
+            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            Delete
+          </button>
+        </div>
+      )}
+    </>
   );
 }
 

@@ -54,7 +54,7 @@ export function ChatInput({
       {/* Main input container */}
       <div className="relative bg-dark-900/80 rounded-2xl border border-dark-700/60 shadow-xl shadow-black/20 backdrop-blur-sm overflow-hidden transition-all duration-200 focus-within:border-cyan-500/50 focus-within:shadow-cyan-500/10">
         {/* Top action bar */}
-        <div className="flex items-center gap-1 px-3 pt-3">
+        {/* <div className="flex items-center gap-1 px-3 pt-3">
           <button
             className="p-2 rounded-lg text-dark-400 hover:text-dark-200 hover:bg-dark-800 transition-colors"
             title="Attach file"
@@ -72,7 +72,7 @@ export function ChatInput({
             <Sparkles className="w-3 h-3" />
             <span>AI Powered</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Input area */}
         <div className="flex items-end gap-3 px-3 pb-3 pt-2">

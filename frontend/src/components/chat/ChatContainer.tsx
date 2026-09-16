@@ -8,17 +8,18 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Search,
   Image,
-  Code,
-  FileText,
-  Briefcase,
-  Languages,
-  Youtube,
-  Mail,
-  FileSearch,
-  Sparkles,
   Send,
   Mic,
   Paperclip,
+  Wifi,
+  Key,
+  Printer,
+  Shield,
+  Laptop,
+  Mail,
+  Globe,
+  Lock,
+  Server,
 } from "lucide-react";
 
 // Dynamic import PixelBlast to avoid SSR issues
@@ -46,37 +47,37 @@ const INPUT_ACTIONS = [
 // Bottom suggestion pills
 const SUGGESTIONS = [
   {
-    icon: Sparkles,
-    label: "AI script writer",
-    prompt: "Help me write a script for a presentation",
+    icon: Wifi,
+    label: "WiFi Issues",
+    prompt: "How do I connect to the university WiFi network?",
   },
-  { icon: Code, label: "Coding Assistant", prompt: "Help me debug my code" },
-  { icon: FileText, label: "Essay writer", prompt: "Help me write an essay" },
+  { icon: Key, label: "Password Reset", prompt: "I forgot my password, how can I reset it?" },
+  { icon: Printer, label: "Printer Setup", prompt: "How do I connect to the office printer?" },
   {
-    icon: Briefcase,
-    label: "Business",
-    prompt: "Help me with business planning",
+    icon: Shield,
+    label: "VPN Access",
+    prompt: "How do I set up and connect to the VPN?",
   },
-  { icon: Languages, label: "Translate", prompt: "Translate text for me" },
-  {
-    icon: Youtube,
-    label: "YouTube summaries",
-    prompt: "Summarize a YouTube video",
-  },
+  { icon: Laptop, label: "Hardware Issue", prompt: "My computer is running very slowly" },
   {
     icon: Mail,
-    label: "AI Email writing",
-    prompt: "Help me write a professional email",
+    label: "Email Config",
+    prompt: "How do I set up my work email on my phone?",
   },
   {
-    icon: FileSearch,
-    label: "AI pdf chat",
-    prompt: "Help me analyze a PDF document",
+    icon: Lock,
+    label: "Account Locked",
+    prompt: "My account is locked out, how do I unlock it?",
   },
   {
-    icon: Sparkles,
-    label: "Research assistant",
-    prompt: "Help me research a topic",
+    icon: Globe,
+    label: "Network Down",
+    prompt: "I cannot access any internal websites",
+  },
+  {
+    icon: Server,
+    label: "Software Install",
+    prompt: "How do I request new software installation?",
   },
 ];
 
