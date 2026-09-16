@@ -110,7 +110,7 @@ cd backend
 python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-The API will be available at: http://localhost:8000
+The APIs will be available at: http://localhost:8000
 API docs at: http://localhost:8000/docs
 
 ### Step 4: Start Frontend Server
